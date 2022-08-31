@@ -1,0 +1,20 @@
+{
+  "resources/js/bootstrap.js": {
+    "file": "assets/bootstrap.a97aa3ac.js",
+    "src": "resources/js/bootstrap.js",
+    "isEntry": true
+  },
+  "resources/js/app.js": {
+    "file": "assets/app.737667f3.js",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/bootstrap.js"
+    ]
+  },
+  "resources/sass/app.scss": {
+    "file": "assets/app.7720662b.css",
+    "src": "resources/sass/app.scss",
+    "isEntry": true
+  }
+}

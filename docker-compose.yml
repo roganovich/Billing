@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+    db:
+        image: mysql
+        container_name: billing_vue_mysql
+        restart: unless-stopped
+        tty: true
+        ports:
+            - "33061:3306"
+        environment:
+            MYSQL_DATABASE: billing
+            MYSQL_ROOT_PASSWORD: billing
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - app-network
+        links:
+            - fpm
+    fpm:
+        build:
+            context: .
+            dockerfile: docker/Fpm.Dockerfile
+        container_name: billing_vue_app
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ./:/var/www
+            - ./docker/conf/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+        networks:
+            - app-network
+        links:
+            - nginx
+    nginx:
+        build:
+            context: .
+            dockerfile: docker/Nginx.Dockerfile
+        container_name: billing_vue_nginx
+        restart: unless-stopped
+        tty: true
+        volumes:
+            - ./:/var/www
+        ports:
+            - 8098:80
+        networks:
+            - app-network
+networks:
+    app-network:
+        driver: bridge
+volumes:
+    dbdata:
+        driver: local
+
+
