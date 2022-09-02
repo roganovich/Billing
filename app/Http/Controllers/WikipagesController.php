@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\WikiPage\WikiPageResourceCollection;
+use App\Http\Resources\WikiPage\OperationResourceCollection;
 use App\Http\Resources\WikiPage\WikiParentResourceCollection;
 use App\Models\Wikipage;
 use Illuminate\Http\Request;
@@ -60,7 +60,7 @@ class WikipagesController extends Controller
             ->sort($this->sort)
             ->paginate(12);
 
-        $items = new WikiPageResourceCollection($query);
+        $items = new OperationResourceCollection($query);
 
         return view('wikipages.index',
             [

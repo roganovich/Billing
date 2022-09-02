@@ -22,7 +22,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->integer('status')->default(1);
             $table->decimal('balance', $precision = 8, $scale = 2)->default(0);
-            $table->json('options');
+            $table->json('options')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

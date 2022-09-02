@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\WikiPage\OperationResourceCollection;
+use App\Http\Resources\Operation\OperationResourceCollection;
 use App\Http\Traits\UploadTrait;
-use App\Models\Wikipage;
+use App\Models\Operation;
 use Illuminate\Http\Request;
 
-class WikipagesController extends Controller
+class OperationsController extends Controller
 {
     use UploadTrait;
 
@@ -19,7 +19,7 @@ class WikipagesController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Wikipage::filter($request->search)
+        $query = Operation::filter($request->search)
             ->sort($request->sort)
             ->paginate(10);
 
@@ -33,7 +33,7 @@ class WikipagesController extends Controller
      */
     public function parentlist()
     {
-        return new OperationResourceCollection(Wikipage::select('id', 'title')->orderBy('title', 'ASC')->get());
+        return new OperationResourceCollection(Operation::select('id', 'title')->orderBy('title', 'ASC')->get());
     }
 
 
@@ -51,7 +51,7 @@ class WikipagesController extends Controller
             'parent_id' => 'numeric|nullable',
         ]);
 
-        $model = Wikipage::create($validate);
+        $model = Operation::create($validate);
         return $model;
     }
 
@@ -63,7 +63,7 @@ class WikipagesController extends Controller
      */
     public function get($id)
     {
-        return Wikipage::select('id', 'title', 'parent_id', 'description')->findOrFail($id);
+        return Operation::select('id', 'title', 'parent_id', 'description')->findOrFail($id);
     }
 
     /**
@@ -81,7 +81,7 @@ class WikipagesController extends Controller
             'parent_id' => 'numeric|nullable',
         ]);
 
-        $model = Wikipage::findOrFail($id);
+        $model = Operation::findOrFail($id);
         $model->update($validate);
 
         return $model;
@@ -95,7 +95,7 @@ class WikipagesController extends Controller
      */
     public function destroy($id)
     {
-        $model = Wikipage::findOrFail($id);
+        $model = Operation::findOrFail($id);
         $model->delete();
     }
 
@@ -113,7 +113,7 @@ class WikipagesController extends Controller
             // Make a image name based on user name and current timestamp
             $name = md5(time());
             // Define folder path
-            $folder = '/uploads/images/wikipages/';
+            $folder = '/uploads/images/operations/';
             // Make a file path where image will be stored [ folder path + file name + file extension]
             $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
             // Upload image

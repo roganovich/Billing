@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\WikiPage\OperationResourceCollection;
+use App\Http\Resources\Account\AccountResourceCollection;
 use App\Http\Traits\UploadTrait;
-use App\Models\Wikipage;
+use App\Models\Account;
 use Illuminate\Http\Request;
 
-class WikipagesController extends Controller
+class AccountsController extends Controller
 {
     use UploadTrait;
 
@@ -19,11 +19,11 @@ class WikipagesController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Wikipage::filter($request->search)
+        $query = Account::filter($request->search)
             ->sort($request->sort)
             ->paginate(10);
 
-        return new OperationResourceCollection($query);
+        return new AccountResourceCollection($query);
     }
 
     /**
@@ -31,9 +31,9 @@ class WikipagesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function parentlist()
+    public function typeslist()
     {
-        return new OperationResourceCollection(Wikipage::select('id', 'title')->orderBy('title', 'ASC')->get());
+        return Account::$types;
     }
 
 
@@ -46,12 +46,23 @@ class WikipagesController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'parent_id' => 'numeric|nullable',
+            'type_id' => 'required',
+            'user_id' => 'required',
+            'title' => 'max:256|required',
+            'description' => 'max:256|nullable',
         ]);
+        $count = Account::withTrashed()->count();
 
-        $model = Wikipage::create($validate);
+        $newId = $count + 1;
+        $left = date('Ymd');
+        // Генерируем номер счета
+        $right = str_pad($newId, 8, '0', STR_PAD_LEFT);
+
+        $code = $left . $right;
+        $validate['code'] = $code;
+
+        $model = Account::create($validate);
+
         return $model;
     }
 
@@ -63,7 +74,7 @@ class WikipagesController extends Controller
      */
     public function get($id)
     {
-        return Wikipage::select('id', 'title', 'parent_id', 'description')->findOrFail($id);
+        return Account::select('id', 'title', 'description')->findOrFail($id);
     }
 
     /**
@@ -76,12 +87,11 @@ class WikipagesController extends Controller
     public function update(Request $request, $id)
     {
         $validate = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'parent_id' => 'numeric|nullable',
+            'title' => 'max:256|required',
+            'description' => 'max:256|nullable',
         ]);
 
-        $model = Wikipage::findOrFail($id);
+        $model = Account::findOrFail($id);
         $model->update($validate);
 
         return $model;
@@ -95,7 +105,7 @@ class WikipagesController extends Controller
      */
     public function destroy($id)
     {
-        $model = Wikipage::findOrFail($id);
+        $model = Account::findOrFail($id);
         $model->delete();
     }
 
@@ -113,7 +123,7 @@ class WikipagesController extends Controller
             // Make a image name based on user name and current timestamp
             $name = md5(time());
             // Define folder path
-            $folder = '/uploads/images/wikipages/';
+            $folder = '/uploads/images/accounts/';
             // Make a file path where image will be stored [ folder path + file name + file extension]
             $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
             // Upload image

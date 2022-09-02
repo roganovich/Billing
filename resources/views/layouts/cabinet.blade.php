@@ -85,7 +85,8 @@
             @php
                 $user_auth_data = [
                     'isLoggedin' => true,
-                    'user' =>  Auth::user()
+                    'user' =>  Auth::user(),
+                    'count_accounts' => AccountsUser::get_count(Auth::user())
                 ];
             @endphp
         @else
@@ -97,6 +98,7 @@
         @endif
         <script>
             window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
+
         </script>
 
         <main id="cabinet" class="py-4 flex-shrink-0">

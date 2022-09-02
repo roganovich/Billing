@@ -55,4 +55,20 @@ Route::group([
         // Удалить запись
         Route::delete('{id}/destroy', [\App\Http\Controllers\Api\V1\UsersController::class, 'destroy']);
     });
+
+    // Страницы Accounts
+    Route::group(['prefix' => 'accounts'], function () {
+        // Список, поиск записей
+        Route::post('', [\App\Http\Controllers\Api\V1\AccountsController::class, 'index']);
+        // Создание новой записи
+        Route::post('store', [\App\Http\Controllers\Api\V1\AccountsController::class, 'store']);
+        // Получить данные записи
+        Route::get('{id}/get', [\App\Http\Controllers\Api\V1\AccountsController::class, 'get']);
+        // Получить типы
+        Route::get('typeslist', [\App\Http\Controllers\Api\V1\AccountsController::class, 'typeslist']);
+        // Обновить запись
+        Route::post('{id}/update', [\App\Http\Controllers\Api\V1\AccountsController::class, 'update']);
+        // Удалить запись
+        Route::delete('{id}/destroy', [\App\Http\Controllers\Api\V1\AccountsController::class, 'destroy']);
+    });
 });
