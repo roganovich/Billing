@@ -1,7 +1,7 @@
 <template>
     <div class="p-1">
         <div class="form-group mt-1">
-            <router-link :to="{name: 'users_index'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
+            <router-link :to="{name: 'users_current'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
         </div>
     </div>
     <div v-if="preloader">
@@ -11,22 +11,6 @@
         <div class="card-title mt-1">Редактируем {{ model.name }}</div>
         <div class="p-1">
             <form v-on:submit.prevent="saveForm()">
-                <div class="row">
-                    <div class="col-xs-12 form-group">
-                        <label class="control-label">Роль</label>
-                        <select v-model="model.role_id"
-                                class="form-control"
-                                v-bind:class="{ 'is-invalid': errors.role_id }"
-                                id="UsersRoleId">
-                            <option v-for="(item, id) in roles" :value="item.id">
-                                {{ item.title }}
-                            </option>
-                        </select>
-                        <div class="invalid-feedback" v-if="errors.role_id">
-                            {{ errors.role_id }}
-                        </div>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-xs-12 form-group">
                         <label class="control-label">Имя</label>
@@ -105,8 +89,7 @@ import VuePreloader from '../preloader.vue';
 
 export default {
     mounted() {
-        this.getData(),
-        this.getRolesList()
+        this.getData()
     },
     components: {
         VuePreloader
@@ -116,12 +99,10 @@ export default {
             preloader: true,
             errors: {},
             model_id: null,
-            roles: {},
             model: {
                 id: '',
                 name: '',
                 email: '',
-                role_id: '',
                 password: '',
                 password2: '',
             }
@@ -131,8 +112,10 @@ export default {
         getData: function () {
             let app = this;
             app.preloader = true;
-            let id = app.$route.params.id;
+            let user = window.Laravel.user;
+            let id = user.id;
             app.model_id = id;
+
             axios.get('/api/v1/users/' + id + '/get/')
                 .then(function (resp) {
                     app.model = resp.data;
@@ -142,25 +125,13 @@ export default {
                     alert('Ошибка')
                 });
         },
-        getRolesList: function () {
-            var app = this;
-            app.preloader = true;
-            axios.get('/api/v1/usersroles/list')
-                .then(function (resp) {
-                    app.roles = resp.data;
-                    app.preloader = false;
-                })
-                .catch(function (resp) {
-                    alert('Ошибка');
-                });
-        },
         saveForm(e) {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
             axios.post('/api/v1/users/' + app.model_id + '/update', newModel)
                 .then(function (resp) {
-                    app.$router.push({name: 'users_index'});
+                    app.$router.push({name: 'users_current'});
                 })
                 .catch(function (resp) {
                     var errors = resp.response.data.errors;

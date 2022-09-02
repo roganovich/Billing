@@ -64,7 +64,7 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function curent(Request $request)
+    public function current(Request $request)
     {
         $id = auth()->id();
         return User::findOrFail($id);

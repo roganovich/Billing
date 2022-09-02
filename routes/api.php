@@ -49,7 +49,7 @@ Route::group([
         // Получить список ролей
         Route::get('rolelist', [\App\Http\Controllers\Api\V1\UsersController::class, 'rolelist']);
         // Получить данные текущего пользователя
-        Route::get('curent', [\App\Http\Controllers\Api\V1\UsersController::class, 'curent'])->name('api.v1.users.curent');
+        Route::get('current', [\App\Http\Controllers\Api\V1\UsersController::class, 'current'])->name('api.v1.users.current');
         // Обновить запись
         Route::post('{id}/update', [\App\Http\Controllers\Api\V1\UsersController::class, 'update']);
         // Удалить запись

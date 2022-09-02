@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,59 +17,103 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/sass/admin.scss', 'resources/js/admin.js'])
 
 </head>
-<body>
-    <div>
-        <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-            <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/">{{ __('default.home') }}</a>
-            <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">{{ __('admin.index') }}</a>
-            <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-nav">
-                <div class="nav-item text-nowrap">
-                    <span class="px-1 text-white">
-                        {{ Auth::user()->name }}
-                    </span>
-                    <span class="px-1 text-white">
-                        {{ Auth::user()->email }}
-                    </span>
-                    <span class="px-1 text-white">
-                        |
-                    </span>
-                    <a class="ps-1 pe-3 text-white"  href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-                        {{ __('auth.logout') }}
-                    </a>
+<body class="d-flex flex-column h-100">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{{ url('/') }}">
+                    <img alt="{{ config('app.name', 'Home') }}"
+                         title="{{ config('app.name', 'Home') }}"
+                         height="25"
+                         class="d-inline-block align-text-top"
+                         src="/logo_light.png"/>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="/">{{ __('default.home') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">{{ __('admin.index') }}</a>
+                        </li>
+                    </ul>
 
+                    <div class="navbar-nav">
+                        <div class="nav-item text-nowrap">
+                            <span class="px-1 text-white">
+                                {{ Auth::user()->name }}
+                            </span>
+                            <span class="px-1 text-white">
+                                {{ Auth::user()->email }}
+                            </span>
+                            <span class="px-1 text-white">
+                                |
+                            </span>
+                            <a class="ps-1 pe-3 text-white"  href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                                {{ __('auth.logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
                 </div>
             </div>
-        </header>
-        @if (Auth::check())
-            @php
-                $user_auth_data = [
-                    'isLoggedin' => true,
-                    'user' =>  Auth::user()
-                ];
-            @endphp
-        @else
-            @php
-                $user_auth_data = [
-                    'isLoggedin' => false
-                ];
-            @endphp
-        @endif
-        <script>
-            window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
-        </script>
+        </nav>
+    </header>
+    @if (Auth::check())
+        @php
+            $user_auth_data = [
+                'isLoggedin' => true,
+                'user' =>  Auth::user()
+            ];
+        @endphp
+    @else
+        @php
+            $user_auth_data = [
+                'isLoggedin' => false
+            ];
+        @endphp
+    @endif
+    <script>
+        window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
+    </script>
 
-        <div id="admin" class="container-fluid">
-            @yield('content')
+    <main id="admin" class="container-fluid py-4 flex-shrink-0 mt-5">
+        @yield('content')
+    </main>
+
+    <footer class="footer mt-auto bg-dark">
+        <div class="container">
+            <div class="d-flex justify-content-between py-4 mt-4 border-top">
+                <p>© {{ date('Y') }} R/R Company, Inc. All rights reserved.</p>
+                <ul class="list-unstyled d-flex">
+                    <li class="ms-3"><a class="link-dark" href="#">
+                            <svg class="bi" width="24" height="24">
+                                <use xlink:href="#twitter"></use>
+                            </svg>
+                        </a></li>
+                    <li class="ms-3"><a class="link-dark" href="#">
+                            <svg class="bi" width="24" height="24">
+                                <use xlink:href="#instagram"></use>
+                            </svg>
+                        </a></li>
+                    <li class="ms-3"><a class="link-dark" href="#">
+                            <svg class="bi" width="24" height="24">
+                                <use xlink:href="#facebook"></use>
+                            </svg>
+                        </a></li>
+                </ul>
+                <div></div>
+            </div>
         </div>
-    </div>
+    </footer>
 </body>
 </html>
+

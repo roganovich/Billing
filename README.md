@@ -24,8 +24,8 @@
 
 ## Скачивание проекта
 - cd /your_sites_directory/
-- git clone git@github.com:roganovich/Larave-Vue.git
-- cd Larave-Vue
+- git clone git@github.com:roganovich/Billing.git
+- cd Billing
 
 ## Развертывание сервера
 - docker-compose build

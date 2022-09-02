@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\WikipagesController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware('auth')->get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin');
 Route::middleware('auth')->get('/cabinet', [App\Http\Controllers\CabinetController::class, 'index'])->name('cabinet');
@@ -24,4 +24,8 @@ Route::get('/wikipages/{id}', [App\Http\Controllers\WikipagesController::class, 
 
 Route::middleware('auth')->get('/admin{any}', function () {
     return view('layouts.admin');
+})->where('any', '.*');
+
+Route::middleware('auth')->get('/cabinet{any}', function () {
+    return view('layouts.cabinet');
 })->where('any', '.*');

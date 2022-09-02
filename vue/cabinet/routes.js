@@ -1,10 +1,10 @@
 /** Пользователи */
-import UsersEdit from './components/users/UsersEdit.vue';
+import UsersCurrent from './components/users/UsersCurrent.vue';
 
 export const routes = [
     {
-        name: 'users_cabinet',
-        path: '/admin/users/cabinet',
-        component: UsersEdit,
+        name: 'users_current',
+        path: '/cabinet/personal',
+        component: UsersCurrent,
     },
 ];

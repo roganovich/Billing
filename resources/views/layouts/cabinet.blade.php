@@ -19,134 +19,98 @@
 
 </head>
 <body class="d-flex flex-column h-100">
-<div id="app">
-    <header>
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-            <div class="container-fluid">
-
+    <div class="container py-3">
+        <header>
+            <div class="d-flex flex-column flex-md-row pb-2 align-items-center">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img alt="{{ config('app.name', 'Home') }}"
                          title="{{ config('app.name', 'Home') }}"
                          height="25"
                          class="d-inline-block align-text-top"
-                         src="/logo.jpg"/>
+                         src="/logo.png"/>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <nav class="d-flex justify-content-start">
+                    <a class="nav-link" aria-current="page" href="/">{{ __('default.home') }}</a>
+                    <span class="px-1"></span>
+                    <a class="nav-link" aria-current="page"
+                       href="{{ route('wikipages.index') }}">{{ __('wikipages.index') }}</a>
+                </nav>
+                <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav me-auto">
+                    <!-- Authentication Links -->
+                    @guest
+                        @if (Route::has('login'))
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
+                        @endif
 
+                        @if (Route::has('register'))
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('auth.register') }}</a>
+                        @endif
+                    @else
+                        <span class="px-1">
+                                {{ Auth::user()->name }}
+                            </span>
+                        <span class="px-1">
+                                        {{ Auth::user()->email }}
+                                    </span>
+                        <span class="px-1">
+                                        |
+                                    </span>
 
-                    </ul>
+                        @if (Auth::user()->isAdmin)
+                            <a class="ps-1 pe-3" href="{{ route('admin') }}">{{ __('admin.index') }}</a>
+                        @endif
+                        @if (Auth::user()->isClient)
+                            <a class="ps-1 pe-3" href="{{ route('cabinet') }}">{{ __('cabinet.index') }}</a>
+                        @endif
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ms-auto">
-
-
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
-                                </li>
-                            @endif
-
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('auth.register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <span class="px-1">
-                                    {{ Auth::user()->name }}
-                                </span>
-                                <span class="px-1">
-                                    {{ Auth::user()->email }}
-                                </span>
-                                <span class="px-1">
-                                    |
-                                </span>
-
-                                @if (Auth::user()->isAdmin)
-                                    <a class="ps-1 pe-3" href="{{ route('admin') }}">{{ __('admin.index') }}</a>
-                                @endif
-                                @if (Auth::user()->isClient)
-                                    <a class="ps-1 pe-3" href="{{ route('cabinet') }}">{{ __('cabinet.index') }}</a>
-                                @endif
-
-                                <a class="ps-1 pe-3" href="{{ route('logout') }}"
-                                   onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                    {{ __('auth.logout') }}
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
+                        <a class="ps-1 pe-3" href="{{ route('logout') }}"
+                           onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                            {{ __('auth.logout') }}
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    @endguest
+                </nav>
             </div>
-        </nav>
-    </header>
+        </header>
+        @if (Auth::check())
+            @php
+                $user_auth_data = [
+                    'isLoggedin' => true,
+                    'user' =>  Auth::user()
+                ];
+            @endphp
+        @else
+            @php
+                $user_auth_data = [
+                    'isLoggedin' => false
+                ];
+            @endphp
+        @endif
+        <script>
+            window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
+        </script>
 
-    @if (Auth::check())
-        @php
-            $user_auth_data = [
-                'isLoggedin' => true,
-                'user' =>  Auth::user()
-            ];
-        @endphp
-    @else
-        @php
-            $user_auth_data = [
-                'isLoggedin' => false
-            ];
-        @endphp
-    @endif
-    <script>
-        window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
-    </script>
-
-    <div id="admin" class="container-fluid">
-        @yield('content')
+        <main id="cabinet" class="py-4 flex-shrink-0">
+            @yield('content')
+        </main>
     </div>
-
-    <main id="cabinet" class="py-4 flex-shrink-0 mt-5">
-        @yield('content')
-    </main>
-
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
-            <div class="d-flex justify-content-between py-4 mt-4 border-top">
-                <p>© {{ date('Y') }} R/R Company, Inc. All rights reserved.</p>
-                <ul class="list-unstyled d-flex">
-                    <li class="ms-3"><a class="link-dark" href="#">
-                            <svg class="bi" width="24" height="24">
-                                <use xlink:href="#twitter"></use>
-                            </svg>
-                        </a></li>
-                    <li class="ms-3"><a class="link-dark" href="#">
-                            <svg class="bi" width="24" height="24">
-                                <use xlink:href="#instagram"></use>
-                            </svg>
-                        </a></li>
-                    <li class="ms-3"><a class="link-dark" href="#">
-                            <svg class="bi" width="24" height="24">
-                                <use xlink:href="#facebook"></use>
-                            </svg>
-                        </a></li>
-                </ul>
-                <div></div>
+            <div class="row">
+                <div class="col-12 col-md">
+                    <small class="d-block mb-3 text-muted">© {{ date('Y') }} R/R Company, Inc. All rights reserved.</small>
+                </div>
             </div>
         </div>
     </footer>
-</div>
 </body>
 </html>

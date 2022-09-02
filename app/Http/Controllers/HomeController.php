@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Wikipage;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $item = Wikipage::orderBy('created_at', 'desc')->first();
+
+        return view('home', [
+            'item' => $item,
+        ]);
     }
 }
