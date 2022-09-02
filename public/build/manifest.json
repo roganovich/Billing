@@ -5,12 +5,42 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app.737667f3.js",
+    "file": "assets/app.057b703a.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "resources/js/bootstrap.js"
+      "resources/js/bootstrap.js",
+      "__plugin-vue_export-helper.075dfc7c.js"
     ]
+  },
+  "resources/sass/admin.scss": {
+    "file": "assets/admin.8c251992.js",
+    "src": "resources/sass/admin.scss",
+    "isEntry": true
+  },
+  "resources/js/admin.js": {
+    "file": "assets/admin.1fd213e8.js",
+    "src": "resources/js/admin.js",
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper.075dfc7c.js"
+    ]
+  },
+  "resources/sass/cabinet.scss": {
+    "file": "assets/cabinet.cd3e6c70.js",
+    "src": "resources/sass/cabinet.scss",
+    "isEntry": true
+  },
+  "resources/js/cabinet.js": {
+    "file": "assets/cabinet.ec3fcabf.js",
+    "src": "resources/js/cabinet.js",
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper.075dfc7c.js"
+    ]
+  },
+  "__plugin-vue_export-helper.075dfc7c.js": {
+    "file": "assets/_plugin-vue_export-helper.075dfc7c.js"
   },
   "resources/sass/app.scss": {
     "file": "assets/app.7720662b.css",

@@ -9,6 +9,12 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/bootstrap.js',
                 'resources/js/app.js',
+
+                'resources/sass/admin.scss',
+                'resources/js/admin.js',
+
+                'resources/sass/cabinet.scss',
+                'resources/js/cabinet.js'
             ],
             refresh: true,
         }),

@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Frontend -->
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/sass/cabinet.scss', 'resources/js/cabinet.js'])
 
 </head>
 <body class="d-flex flex-column h-100">
@@ -95,9 +95,33 @@
             </div>
         </nav>
     </header>
-    <main class="py-4 flex-shrink-0 mt-5">
+
+    @if (Auth::check())
+        @php
+            $user_auth_data = [
+                'isLoggedin' => true,
+                'user' =>  Auth::user()
+            ];
+        @endphp
+    @else
+        @php
+            $user_auth_data = [
+                'isLoggedin' => false
+            ];
+        @endphp
+    @endif
+    <script>
+        window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
+    </script>
+
+    <div id="admin" class="container-fluid">
+        @yield('content')
+    </div>
+
+    <main id="cabinet" class="py-4 flex-shrink-0 mt-5">
         @yield('content')
     </main>
+
     <footer class="footer mt-auto py-3 bg-light">
         <div class="container">
             <div class="d-flex justify-content-between py-4 mt-4 border-top">

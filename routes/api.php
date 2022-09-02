@@ -17,3 +17,42 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group([
+    'prefix' => '/v1/',], function () {
+    // Страницы WIKI
+    Route::group(['prefix' => 'wikipages'], function () {
+        // Список, поиск записей
+        Route::post('', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'index']);
+        // Создание новой записи
+        Route::post('store', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'store']);
+        // Получить данные записи
+        Route::get('{id}/get', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'get']);
+        // Обновить запись
+        Route::post('{id}/update', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'update']);
+        // Удалить запись
+        Route::delete('{id}/destroy', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'destroy']);
+        // Пролучить категории
+        Route::get('parentlist', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'parentlist']);
+        // Загрузить изображение
+        Route::post('addimage', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'addimage']);
+    });
+
+    // Страницы Users
+    Route::group(['prefix' => 'users'], function () {
+        // Список, поиск записей
+        Route::post('', [\App\Http\Controllers\Api\V1\UsersController::class, 'index']);
+        // Создание новой записи
+        Route::post('store', [\App\Http\Controllers\Api\V1\UsersController::class, 'store']);
+        // Получить данные записи
+        Route::get('{id}/get', [\App\Http\Controllers\Api\V1\UsersController::class, 'get']);
+        // Получить список ролей
+        Route::get('rolelist', [\App\Http\Controllers\Api\V1\UsersController::class, 'rolelist']);
+        // Получить данные текущего пользователя
+        Route::get('curent', [\App\Http\Controllers\Api\V1\UsersController::class, 'curent'])->name('api.v1.users.curent');
+        // Обновить запись
+        Route::post('{id}/update', [\App\Http\Controllers\Api\V1\UsersController::class, 'update']);
+        // Удалить запись
+        Route::delete('{id}/destroy', [\App\Http\Controllers\Api\V1\UsersController::class, 'destroy']);
+    });
+});
