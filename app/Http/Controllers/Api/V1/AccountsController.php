@@ -6,11 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Account\AccountResourceCollection;
 use App\Http\Traits\UploadTrait;
 use App\Models\Account;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AccountsController extends Controller
 {
     use UploadTrait;
+
+    public function __construct()
+    {
+        $this->middleware('jwt');
+    }
 
     /**
      * Display a listing of the resource.

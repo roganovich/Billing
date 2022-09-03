@@ -129,25 +129,29 @@ export default {
         VueFilter,
         VuePreloader
     },
+    computed: {
+        axiosParams() {
+            const params = new URLSearchParams();
+            params.append('user_id', window.Laravel.user.id);
+            params.append('accessToken', window.Laravel.accessToken);
+            return params;
+        }
+    },
     methods: {
         getResults: function () {
             var app = this;
             app.preloader = false;
             app.search = true;
-            let user = window.Laravel.user;
-            let count_accounts = this.count_accounts
-            console.log(count_accounts);
-            let id = user.id;
             this.itemssearch.page = this.items.meta.current_page;
-            this.itemssearch.search.user_id = id;
+            this.itemssearch.search.user_id = this.axiosParams.get('user_id');
+            // Auth
+            this.itemssearch.user_id = this.axiosParams.get('user_id') ;
+            this.itemssearch.accessToken = this.axiosParams.get('accessToken') ;
 
             axios.post('/api/v1/accounts', this.itemssearch)
                 .then(function (resp) {
                     app.items = resp.data;
                     app.search = false;
-                    // Обновляем счетчик
-                    count_accounts = count_accounts  + 1;
-                    //console.log(count_accounts);
                 })
                 .catch(function (resp) {
                     alert('Ошибка');
@@ -157,7 +161,7 @@ export default {
             if (confirm('Вы уверены что хотите удалить? ', {title:item.title})) {
                 var app = this;
                 app.search = true;
-                axios.delete('/api/v1/accounts/' + item.id + '/destroy')
+                axios.delete('/api/v1/accounts/' + item.id + '/destroy' + '?' + this.axiosParams)
                     .then(function (resp) {
                         app.search = false;
                         app.$router.push({name: 'accounts_index'});

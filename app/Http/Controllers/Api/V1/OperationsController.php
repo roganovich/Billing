@@ -12,6 +12,11 @@ class OperationsController extends Controller
 {
     use UploadTrait;
 
+    public function __construct()
+    {
+        $this->middleware('jwt');
+    }
+
     /**
      * Display a listing of the resource.
      *

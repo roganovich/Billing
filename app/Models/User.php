@@ -16,6 +16,8 @@ class User extends Authenticatable
 
     const ROLE_ADMIN = 2;
     const ROLE_CLIENT = 1;
+    const TOKEN_CABINET = 'Cabinet-Auth';
+    const TOKEN_ADMIN = 'Admin-Auth';
     /**
      * The attributes that are mass assignable.
      *
@@ -79,5 +81,27 @@ class User extends Authenticatable
     public function getIsClientAttribute()
     {
         return ($this->role_id == self::ROLE_CLIENT);
+    }
+
+    /**
+     * Get the users api access token.
+     *
+     * @param string $section_name
+     */
+    public function getAccessToken(string $section_name)
+    {
+        $existingToken = $this->tokens()
+            ->where('tokenable_type', '=', self::class)
+            ->where('tokenable_id', '=', $this->id)
+            ->where('name', '=', self::TOKEN_CABINET)
+            ->first();
+
+        if ($existingToken) {
+            return $existingToken->token;
+        }
+
+        $accessToken = $this->createToken(self::TOKEN_CABINET)->accessToken;
+
+        return $accessToken->token;
     }
 }

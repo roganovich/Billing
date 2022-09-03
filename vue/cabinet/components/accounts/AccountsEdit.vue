@@ -74,13 +74,22 @@ export default {
             }
         }
     },
+    computed: {
+        axiosParams() {
+            const params = new URLSearchParams();
+            params.append('user_id', window.Laravel.user.id);
+            params.append('accessToken', window.Laravel.accessToken);
+            return params;
+        }
+    },
+
     methods: {
         getData: function () {
             let app = this;
             app.preloader = true;
             let id = app.$route.params.id;
             app.model_id = id;
-            axios.get('/api/v1/accounts/' + id + '/get/')
+            axios.get('/api/v1/accounts/' + id + '/get/' + '?' + this.axiosParams)
                 .then(function (resp) {
                     app.model = resp.data;
                     app.preloader = false;
@@ -93,6 +102,10 @@ export default {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
+            // Auth
+            newModel.user_id = this.axiosParams.get('user_id') ;
+            newModel.accessToken = this.axiosParams.get('accessToken') ;
+
             axios.post('/api/v1/accounts/' + app.model_id + '/update', newModel)
                 .then(function (resp) {
                     app.$router.push({name: 'accounts_index'});

@@ -108,6 +108,14 @@ export default {
             }
         }
     },
+    computed: {
+        axiosParams() {
+            const params = new URLSearchParams();
+            params.append('user_id', window.Laravel.user.id);
+            params.append('accessToken', window.Laravel.accessToken);
+            return params;
+        }
+    },
     methods: {
         getData: function () {
             let app = this;
@@ -116,7 +124,7 @@ export default {
             let id = user.id;
             app.model_id = id;
 
-            axios.get('/api/v1/users/' + id + '/get/')
+            axios.get('/api/v1/users/' + id + '/get/' + '?' + this.axiosParams)
                 .then(function (resp) {
                     app.model = resp.data;
                     app.preloader = false;

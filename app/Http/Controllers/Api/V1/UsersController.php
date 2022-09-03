@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('jwt');
+    }
+
     /**
      * Display a listing of the resource.
      *

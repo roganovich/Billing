@@ -2,22 +2,33 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AccountsUser
 {
     /**
-     * @param App\Models\User $user
-     *
-     * @return integer
+     * Возвращаем данные для работы авторизации по API
+     * @param string $section_name
+     * @return mixed
      */
-    public static function get_count($user)
+    public static function getVueAuth(string $section_name)
     {
-        $count = DB::table('accounts')
-            ->where('user_id', $user->id)
-            ->whereNull('deleted_at')
-            ->count();
+        $user_auth_data = [
+            'isLoggedin' => false,
+            'user' => Null,
+            'accessToken' => Null,
+        ];
 
-        return $count;
+        if (Auth::check()) {
+            $user = Auth::user();
+
+            $user_auth_data = [
+                'isLoggedin' => true,
+                'user' => $user,
+                'accessToken' => $user->getAccessToken($section_name),
+            ];
+        }
+
+        return base64_encode(json_encode($user_auth_data));
     }
 }
