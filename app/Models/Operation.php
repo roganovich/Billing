@@ -40,7 +40,6 @@ class Operation extends Model
         self::TYPE_MANUAL => 'Ручное'
     ];
 
-
     // Поиск по полям
     public function scopeFilter(Builder $builder, $request)
     {

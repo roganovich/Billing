@@ -66,6 +66,12 @@ Route::group([
         Route::get('{id}/get', [\App\Http\Controllers\Api\V1\AccountsController::class, 'get']);
         // Получить типы
         Route::get('typeslist', [\App\Http\Controllers\Api\V1\AccountsController::class, 'typeslist']);
+        // Получить статусы
+        Route::get('statuseslist', [\App\Http\Controllers\Api\V1\AccountsController::class, 'statuseslist']);
+        // Форма пополнения счета
+        Route::get('{id}/payment', [\App\Http\Controllers\Api\V1\AccountsController::class, 'payment']);
+        // Сохранить оплату
+        Route::post('{id}/pay', [\App\Http\Controllers\Api\V1\AccountsController::class, 'pay']);
         // Обновить запись
         Route::post('{id}/update', [\App\Http\Controllers\Api\V1\AccountsController::class, 'update']);
         // Удалить запись

@@ -20,6 +20,7 @@ class AccountResource extends JsonResource
             'title' => $this->title,
             'type_id' => $this->type_id,
             'type' => $this->type,
+            'status_id' => $this->status_id,
             'status' => $this->status,
             'balance' => $this->balance,
             'description' => $this->description,

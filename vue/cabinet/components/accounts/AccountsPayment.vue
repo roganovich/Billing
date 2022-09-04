@@ -5,14 +5,23 @@
     <div v-else class=" mt-1">
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title mt-1">Создание нового счета</h2>
+                <h2 class="card-title mt-1">Новый взнос по счету</h2>
+            </div>
+            <div class="card-body">
+                <div class="mt-1">
+                    <vue-view :model="model"></vue-view>
+                </div>
+            </div>
+
+            <div class="card-header">
+                <h2 class="card-title mt-1">Форма оплаты</h2>
             </div>
             <div class="card-body">
                 <div class="p-1">
                     <form v-on:submit.prevent="saveForm()">
                         <div class="row">
                             <div class="col-xs-12 form-group">
-                                <label class="control-label">Тип счета</label>
+                                <label class="control-label">Тип взноса</label>
                                 <select v-model="model.type_id"
                                         class="form-control"
                                         v-bind:class="{ 'is-invalid': errors.type_id }"
@@ -29,29 +38,13 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12 form-group">
-                                <label class="control-label">Заголовок</label>
+                                <label class="control-label">Сумма</label>
                                 <input type="text"
-                                       v-model="model.title"
+                                       v-model="model.amount"
                                        class="form-control"
-                                       v-bind:class="{ 'is-invalid': errors.title }">
-                                <div class="invalid-feedback" v-if="errors.title">
-                                    {{ errors.title }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 form-group">
-                                <label class="control-label">Описание</label>
-                                <vue-editor
-                                    id="editor"
-                                    useCustomImageHandler
-                                    @imageAdded="handleImageAdded"
-                                    v-bind:class="{ 'is-invalid': errors.description }"
-                                    v-model="model.description"
-                                >
-                                </vue-editor>
-                                <div class="invalid-feedback" v-if="errors.description">
-                                    {{ errors.description }}
+                                       v-bind:class="{ 'is-invalid': errors.amount }">
+                                <div class="invalid-feedback" v-if="errors.amount">
+                                    {{ errors.amount }}
                                 </div>
                             </div>
                         </div>
@@ -69,49 +62,56 @@
 
 <script>
 import VuePreloader from '../preloader.vue';
+import VueView from './view.vue';
 import {VueEditor} from "vue3-editor";
 
-const headers = {
-    Authorization: 'Bearer ' + window.Laravel.accessToken,
-    Section: 'Cabinet-Auth'
-};
 export default {
     inject: ['axiosHeaders'],
     mounted() {
+        this.getData(),
         this.getTypesList()
     },
     components: {
         VuePreloader,
-        VueEditor
+        VueEditor,
+        VueView
     },
     data: function () {
         return {
-            preloader: false,
+            preloader: true,
             errors: {},
             types: {},
             model_id: null,
             model: {
-                id: null,
-                title: null,
-                type_id: null,
-                user_id: null,
-                description: null,
+                id: '',
+                title: '',
+                description: '',
             }
         }
     },
-    created() {
-        if (window.Laravel.user) {
-            this.user = window.Laravel.user
-            this.user_id = window.Laravel.user.id
-        }
-    },
     methods: {
+        getData: function () {
+            let app = this;
+            app.preloader = true;
+            let id = app.$route.params.id;
+            app.model_id = id;
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/accounts/' + id + '/get/', {headers})
+                .then(function (resp) {
+                    app.model = resp.data;
+                    app.preloader = false;
+                })
+                .catch(function () {
+                    alert('Ошибка')
+                });
+        },
         getTypesList: function () {
             var app = this;
             app.preloader = true;
-            let headers = this.axiosHeaders
+            let headers = this.axiosHeaders;
 
-            axios.get('/api/v1/accounts/typeslist', {headers})
+            axios.get('/api/v1/operations/typeslist', {headers})
                 .then(function (resp) {
                     app.types = resp.data;
                     app.preloader = false;
@@ -126,11 +126,9 @@ export default {
             var newModel = app.model;
             let headers = this.axiosHeaders
 
-            axios.post('/api/v1/accounts/store', newModel, {headers})
+            axios.post('/api/v1/accounts/' + app.model_id + '/pay', newModel, {headers})
                 .then(function (resp) {
                     app.$router.push({name: 'accounts_index'});
-                    app.preloader = false;
-                    ;
                 })
                 .catch(function (resp) {
                     var errors = resp.response.data.errors;
@@ -141,21 +139,6 @@ export default {
 
             app.preloader = false;
         },
-        handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
-            var formData = new FormData();
-            formData.append("image", file);
-            let headers = this.axiosHeaders
-
-            axios.post('/api/v1/accounts/addimage', formData, {headers})
-                .then(function (resp) {
-                    const url = resp.data.url; // Get url from response
-                    Editor.insertEmbed(cursorLocation, "image", url);
-                    resetUploader();
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
     }
 }
 </script>

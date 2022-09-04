@@ -6,13 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Account\AccountResourceCollection;
 use App\Http\Traits\UploadTrait;
 use App\Models\Account;
+use App\Models\Operation;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class AccountsController extends Controller
 {
-    use UploadTrait;
-
     public function __construct()
     {
         $this->middleware('jwt');
@@ -33,7 +32,7 @@ class AccountsController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Получаем все типы
      *
      * @return \Illuminate\Http\Response
      */
@@ -42,6 +41,15 @@ class AccountsController extends Controller
         return Account::$types;
     }
 
+    /**
+     * Получаем все статусы
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function statuseslist()
+    {
+        return Account::$statuses;
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -73,6 +81,36 @@ class AccountsController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pay(Request $request, $id)
+    {
+        $validate = $request->validate([
+            'type_id' => 'required',
+            'amount' => 'required|numeric|between:0,999999.99',
+        ]);
+
+        $account = Account::findOrFail($id);
+
+        $validate['account_id'] = $account->id;
+        $validate['status_id'] = Operation::STATUS_NEW;
+        $validate['balance'] = array_sum([$account->balance, $validate['amount']]);
+        $validate['options'] = json_encode($validate);
+
+        $model = Operation::create($validate);
+
+        $account->balance = $model->balance;
+        $account->save();
+
+        return $model;
+    }
+
+
+    /**
      * Display the specified resource.
      *
      * @param int $id
@@ -80,8 +118,20 @@ class AccountsController extends Controller
      */
     public function get($id)
     {
-        return Account::select('id', 'title', 'description')->findOrFail($id);
+        return Account::findOrFail($id);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function payment($id)
+    {
+        return Account::findOrFail($id);
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -113,30 +163,5 @@ class AccountsController extends Controller
     {
         $model = Account::findOrFail($id);
         $model->delete();
-    }
-
-    public function addimage(Request $request)
-    {
-        // Form validation
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        // Check if a profile image has been uploaded
-        if ($request->has('image')) {
-            // Get image file
-            $image = $request->file('image');
-            // Make a image name based on user name and current timestamp
-            $name = md5(time());
-            // Define folder path
-            $folder = '/uploads/images/accounts/';
-            // Make a file path where image will be stored [ folder path + file name + file extension]
-            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
-            // Upload image
-            $this->uploadOne($image, $folder, 'public', $name);
-
-            return json_encode(['url' => $filePath]);
-        }
-
     }
 }

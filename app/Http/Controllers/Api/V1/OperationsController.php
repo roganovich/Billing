@@ -31,11 +31,23 @@ class OperationsController extends Controller
         return new OperationResourceCollection($query);
     }
 
-    public function statuseslist(){
+    /**
+     * Получаем все статусы
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function statuseslist()
+    {
         return Operation::$statuses;
     }
 
-    public function typeslist(){
+    /**
+     * Получаем все типы
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function typeslist()
+    {
         return Operation::$types;
     }
 
@@ -65,7 +77,7 @@ class OperationsController extends Controller
      */
     public function get($id)
     {
-        return Operation::select('id', 'title', 'parent_id', 'description')->findOrFail($id);
+        return Operation::findOrFail($id);
     }
 
 }

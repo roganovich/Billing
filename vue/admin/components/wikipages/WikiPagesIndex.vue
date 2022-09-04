@@ -77,7 +77,7 @@
 import VuePagination from '../pagination.vue';
 import VueFilter from './filter.vue';
 import VuePreloader from '../preloader.vue';
-//import moment from 'moment';
+import moment from 'moment';
 
 export default {
     data: function () {
@@ -146,7 +146,7 @@ export default {
             }
         },
         short_date(date) {
-            return date; //moment(String(date)).format('DD.MM.YYYY hh:mm');
+            return (date) ? moment(String(date)).format('DD.MM.YYYY hh:mm') : '';
         },
     },
 }

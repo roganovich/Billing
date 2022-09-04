@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('code');
             $table->string('title')->nullable();
             $table->longText('description')->nullable();
-            $table->integer('status')->default(1);
+            $table->integer('status_id')->default(1);
             $table->decimal('balance', $precision = 8, $scale = 2)->default(0);
             $table->json('options')->nullable();
             $table->timestamps();

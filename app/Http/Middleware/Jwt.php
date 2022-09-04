@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\User;
 use Closure;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Auth\AuthenticationException;
 
 class Jwt
 {
@@ -24,6 +25,6 @@ class Jwt
             return $next($request);
         }
 
-        throw ValidationException::withMessages(['accessToken' => 'This value is incorrect']);
+        throw new AuthenticationException();
     }
 }

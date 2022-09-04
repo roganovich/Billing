@@ -14,6 +14,17 @@
                         <div class="row p-1">
                             <h6 class="card-title">Поиск</h6>
                             <div class="col-md-3 col-g-2">
+                                <label for="inputSearchStatusId" class="form-label">Статус</label>
+                                <select v-model="itemssearch.search.status_id"
+                                        class= "form-control form-control-sm"
+                                        id="inputSearchStatusId">
+                                    <option :value="null" disabled>Выбрать</option>
+                                    <option v-for="(item, id) in statuses" :value="id">
+                                        {{ item }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-g-2">
                                 <label for="inputSearchTypeId" class="form-label">Тип счета</label>
                                 <select v-model="itemssearch.search.type_id"
                                         class= "form-control form-control-sm"
@@ -102,10 +113,12 @@ export default {
     data: function () {
         return {
             types: {},
+            statuses: {},
         }
     },
     mounted() {
-        this.getTypesList()
+        this.getTypesList(),
+        this.getStatusesList()
     },
     methods: {
         getTypesList: function () {
@@ -114,6 +127,20 @@ export default {
             let headers = this.axiosHeaders;
 
             axios.get('/api/v1/accounts/typeslist', {headers})
+                .then(function (resp) {
+                    app.types = resp.data;
+                    app.preloader = false;
+                })
+                .catch(function (resp) {
+                    alert('Ошибка');
+                });
+        },
+        getStatusesList: function () {
+            var app = this;
+            app.preloader = true;
+            let headers = this.axiosHeaders;
+
+            axios.get('/api/v1/accounts/statuseslist', {headers})
                 .then(function (resp) {
                     app.types = resp.data;
                     app.preloader = false;

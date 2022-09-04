@@ -17,6 +17,10 @@ class Account extends Model
     const TYPE_FIZ = 1;
     const TYPE_UR = 2;
 
+    const STATUS_NEW = 1;
+    const STATUS_CURENT = 2;
+    const STATUS_CLOSE = -1;
+
     protected $table = 'accounts';
 
     protected $fillable = ['code', 'user_id', 'type_id', 'title', 'status', 'balance', 'description', 'created_at', 'updated_at'];
@@ -24,6 +28,12 @@ class Account extends Model
     public static $types = [
         self::TYPE_FIZ => 'Физ.лицо',
         self::TYPE_UR => 'Юр.лицо',
+    ];
+
+    public static $statuses = [
+        self::STATUS_NEW => 'Новый',
+        self::STATUS_CURENT => 'Текущий',
+        self::STATUS_CLOSE => 'Закрыт',
     ];
 
     // Поиск по полям
@@ -42,6 +52,12 @@ class Account extends Model
     {
         return (isset(self::$types[$this->type_id])) ? self::$types[$this->type_id] : Null;
     }
+
+    public function getStatusAttribute()
+    {
+        return (isset(self::$statuses[$this->status_id])) ? self::$statuses[$this->status_id] : Null;
+    }
+
 
     public function getIsFizAttribute()
     {
