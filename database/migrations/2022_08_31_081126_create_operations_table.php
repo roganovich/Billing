@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('account_id');
             $table->integer('type_id')->default(1);
-            $table->integer('status')->default(1);
+            $table->integer('status_id')->default(1);
             $table->decimal('amount', $precision = 8, $scale = 2)->default(0);
             $table->decimal('balance', $precision = 8, $scale = 2)->default(0);
             $table->json('options');

@@ -39,7 +39,6 @@
                                 <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
                             </svg>
                             Список моих счетов
-                            <span class="badge bg-primary"> {{ count_accounts  }}</span>
                         </router-link>
                     </li>
                     <li class="nav-item">
@@ -61,17 +60,17 @@
 </template>
 
 <script>
-
 export default {
     provide:{
         auth: window.Laravel.user,
         isLoggedin: window.Laravel.isLoggedin,
-        count_accounts: window.Laravel.count_accounts
+        axiosHeaders: {
+            Authorization: 'Bearer ' + window.Laravel.accessToken,
+            Section: 'Cabinet-Auth'
+        }
     },
     created() {
-        this.auth = window.Laravel.user;
         this.isLoggedin = window.Laravel.isLoggedin;
-        this.count_accounts = window.Laravel.count_accounts;
     },
 }
 </script>

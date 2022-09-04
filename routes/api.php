@@ -71,4 +71,14 @@ Route::group([
         // Удалить запись
         Route::delete('{id}/destroy', [\App\Http\Controllers\Api\V1\AccountsController::class, 'destroy']);
     });
+
+    // Страницы Operations
+    Route::group(['prefix' => 'operations'], function () {
+        // Список, поиск записей
+        Route::post('', [\App\Http\Controllers\Api\V1\OperationsController::class, 'index']);
+        // Получить типы
+        Route::get('typeslist', [\App\Http\Controllers\Api\V1\OperationsController::class, 'typeslist']);
+        // Получить статусы
+        Route::get('statuseslist', [\App\Http\Controllers\Api\V1\OperationsController::class, 'statuseslist']);
+    });
 });

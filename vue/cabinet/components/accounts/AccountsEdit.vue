@@ -53,8 +53,8 @@
 <script>
 import VuePreloader from '../preloader.vue';
 import {VueEditor} from "vue3-editor";
-
 export default {
+    inject: ['axiosHeaders'],
     mounted() {
         this.getData()
     },
@@ -74,22 +74,15 @@ export default {
             }
         }
     },
-    computed: {
-        axiosParams() {
-            const params = new URLSearchParams();
-            params.append('user_id', window.Laravel.user.id);
-            params.append('accessToken', window.Laravel.accessToken);
-            return params;
-        }
-    },
-
     methods: {
         getData: function () {
             let app = this;
             app.preloader = true;
             let id = app.$route.params.id;
             app.model_id = id;
-            axios.get('/api/v1/accounts/' + id + '/get/' + '?' + this.axiosParams)
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/accounts/' + id + '/get/', {headers})
                 .then(function (resp) {
                     app.model = resp.data;
                     app.preloader = false;
@@ -102,11 +95,9 @@ export default {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
-            // Auth
-            newModel.user_id = this.axiosParams.get('user_id') ;
-            newModel.accessToken = this.axiosParams.get('accessToken') ;
+            let headers = this.axiosHeaders
 
-            axios.post('/api/v1/accounts/' + app.model_id + '/update', newModel)
+            axios.post('/api/v1/accounts/' + app.model_id + '/update', newModel, {headers})
                 .then(function (resp) {
                     app.$router.push({name: 'accounts_index'});
                 })
@@ -116,6 +107,7 @@ export default {
                         app.errors[row] = errors[row][0];
                     }
                 });
+
             app.preloader = false;
         },
     }

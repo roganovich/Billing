@@ -17,7 +17,12 @@ class OperationResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'description' => $this->description,
+            'type' => $this->type,
+            'status' => $this->status,
+            'account' => $this->account,
+            'amount' => $this->amount,
+            'balance' => $this->balance,
+            'options' => $this->options,
             'updated_at' => $this->updated_at,
         ];
     }

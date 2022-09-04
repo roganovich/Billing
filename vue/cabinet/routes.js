@@ -6,8 +6,7 @@ import AccountsCreate from './components/accounts/AccountsCreate.vue';
 import AccountsEdit from './components/accounts/AccountsEdit.vue';
 /** Операции */
 import OperationsIndex from './components/operations/OperationsIndex.vue';
-import OperationsCreate from './components/operations/OperationsCreate.vue';
-import OperationsEdit from './components/operations/OperationsEdit.vue';
+import OperationsView from './components/operations/OperationsView.vue';
 
 export const routes = [
     /** Users */
@@ -39,13 +38,8 @@ export const routes = [
         component: OperationsIndex,
     },
     {
-        name: 'operations_index',
-        path: '/cabinet/operations/create',
-        component: OperationsCreate,
-    },
-    {
-        name: 'operations_edit',
-        path: '/cabinet/operations/edit/:id',
-        component: OperationsEdit,
+        name: 'operations_view',
+        path: '/cabinet/operations/view/:id',
+        component: OperationsView,
     },
 ];

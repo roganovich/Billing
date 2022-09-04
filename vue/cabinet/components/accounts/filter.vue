@@ -95,20 +95,13 @@
 <script>
 
 export default {
+    inject: ['axiosHeaders'],
     props: {
         itemssearch: Object,
     },
     data: function () {
         return {
             types: {},
-        }
-    },
-    computed: {
-        axiosParams() {
-            const params = new URLSearchParams();
-            params.append('user_id', window.Laravel.user.id);
-            params.append('accessToken', window.Laravel.accessToken);
-            return params;
         }
     },
     mounted() {
@@ -118,7 +111,9 @@ export default {
         getTypesList: function () {
             var app = this;
             app.preloader = true;
-            axios.get('/api/v1/accounts/typeslist' + '?' + this.axiosParams)
+            let headers = this.axiosHeaders;
+
+            axios.get('/api/v1/accounts/typeslist', {headers})
                 .then(function (resp) {
                     app.types = resp.data;
                     app.preloader = false;

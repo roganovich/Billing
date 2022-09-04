@@ -1,14 +1,14 @@
 <template>
     <div class="p-1">
         <div class="form-group mt-1">
-            <router-link :to="{name: 'wikipages_index'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
+            <router-link :to="{name: 'accounts_index'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
         </div>
     </div>
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
     <div v-else class=" mt-1">
-        <div class="card-title mt-1">Создание</div>
+        <div class="card-title mt-1">Редактируем {{ model.code }} ({{ model.title }})</div>
         <div class="p-1">
             <form v-on:submit.prevent="saveForm()">
                 <div class="row">
@@ -53,15 +53,18 @@
 <script>
 import VuePreloader from '../preloader.vue';
 import {VueEditor} from "vue3-editor";
-
 export default {
+    inject: ['axiosHeaders'],
+    mounted() {
+        this.getData()
+    },
     components: {
         VuePreloader,
         VueEditor
     },
     data: function () {
         return {
-            preloader: false,
+            preloader: true,
             errors: {},
             model_id: null,
             model: {
@@ -72,14 +75,31 @@ export default {
         }
     },
     methods: {
+        getData: function () {
+            let app = this;
+            app.preloader = true;
+            let id = app.$route.params.id;
+            app.model_id = id;
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/accounts/' + id + '/get/', {headers})
+                .then(function (resp) {
+                    app.model = resp.data;
+                    app.preloader = false;
+                })
+                .catch(function () {
+                    alert('Ошибка')
+                });
+        },
         saveForm(e) {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
-            axios.post('/api/v1/wikipages/store', newModel)
+            let headers = this.axiosHeaders
+
+            axios.post('/api/v1/accounts/' + app.model_id + '/update', newModel, {headers})
                 .then(function (resp) {
-                    app.$router.push({name: 'wikipages_index'});
-                    app.preloader = false;
+                    app.$router.push({name: 'accounts_index'});
                 })
                 .catch(function (resp) {
                     var errors = resp.response.data.errors;
@@ -87,24 +107,9 @@ export default {
                         app.errors[row] = errors[row][0];
                     }
                 });
+
             app.preloader = false;
         },
-        handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
-            var app = this;
-
-            var formData = new FormData();
-            formData.append("image", file);
-
-            axios.post('/api/v1/wikipages/addimage', formData)
-                .then(function (resp) {
-                    const url = resp.data.url; // Get url from response
-                    Editor.insertEmbed(cursorLocation, "image", url);
-                    resetUploader();
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-        }
     }
 }
 </script>

@@ -86,8 +86,12 @@
 
 <script>
 import VuePreloader from '../preloader.vue';
-
+const headers = {
+    Authorization: 'Bearer ' + window.Laravel.accessToken,
+    Section: 'Cabinet-Auth'
+};
 export default {
+    inject: ['axiosHeaders'],
     mounted() {
         this.getData()
     },
@@ -108,14 +112,6 @@ export default {
             }
         }
     },
-    computed: {
-        axiosParams() {
-            const params = new URLSearchParams();
-            params.append('user_id', window.Laravel.user.id);
-            params.append('accessToken', window.Laravel.accessToken);
-            return params;
-        }
-    },
     methods: {
         getData: function () {
             let app = this;
@@ -123,8 +119,9 @@ export default {
             let user = window.Laravel.user;
             let id = user.id;
             app.model_id = id;
+            let headers = this.axiosHeaders
 
-            axios.get('/api/v1/users/' + id + '/get/' + '?' + this.axiosParams)
+            axios.get('/api/v1/users/' + id + '/get/', {headers})
                 .then(function (resp) {
                     app.model = resp.data;
                     app.preloader = false;
@@ -137,7 +134,9 @@ export default {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
-            axios.post('/api/v1/users/' + app.model_id + '/update', newModel)
+            let headers = this.axiosHeaders
+
+            axios.post('/api/v1/users/' + app.model_id + '/update', newModel, {headers})
                 .then(function (resp) {
                     app.$router.push({name: 'users_current'});
                 })
@@ -147,6 +146,7 @@ export default {
                         app.errors[row] = errors[row][0];
                     }
                 });
+
             app.preloader = false;
         },
     }

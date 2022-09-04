@@ -3,27 +3,24 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Closure;
+use Illuminate\Support\Facades\DB;
 
 class Jwt
 {
     public function handle($request, Closure $next)
     {
-        $request->validate([
-            'user_id' => 'required',
-            'accessToken' => 'required',
-        ]);
+        $token = $request->bearerToken();
+        $section_name = $request->header('Section');
 
-        $user = User::findOrFail($request->user_id);
-        if ($user->isAdmin) {
-            $section_name = User::TOKEN_ADMIN;
-        } else {
-            $section_name = User::TOKEN_CABINET;
-        }
-        $user_token = $user->getAccessToken($section_name);
+        $user = DB::table('personal_access_tokens')
+            ->select('tokenable_id')
+            ->where('tokenable_type', '=', User::class)
+            ->where('name', '=', $section_name)
+            ->where('token', '=', $token)
+            ->first();
 
-        if (strcmp($user_token, $request->accessToken) == 0) {
+        if ($user) {
             return $next($request);
         }
 

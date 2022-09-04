@@ -70,8 +70,12 @@
 <script>
 import VuePreloader from '../preloader.vue';
 import {VueEditor} from "vue3-editor";
-
+const headers = {
+    Authorization: 'Bearer ' + window.Laravel.accessToken,
+    Section: 'Cabinet-Auth'
+};
 export default {
+    inject: ['axiosHeaders'],
     mounted() {
         this.getTypesList()
     },
@@ -100,19 +104,13 @@ export default {
             this.user_id = window.Laravel.user.id
         }
     },
-    computed: {
-        axiosParams() {
-            const params = new URLSearchParams();
-            params.append('user_id', window.Laravel.user.id);
-            params.append('accessToken', window.Laravel.accessToken);
-            return params;
-        }
-    },
     methods: {
         getTypesList: function () {
             var app = this;
             app.preloader = true;
-            axios.get('/api/v1/accounts/typeslist' + '?' + this.axiosParams)
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/accounts/typeslist', {headers})
                 .then(function (resp) {
                     app.types = resp.data;
                     app.preloader = false;
@@ -125,14 +123,13 @@ export default {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
-            // Auth
-            newModel.user_id = this.axiosParams.get('user_id') ;
-            newModel.accessToken = this.axiosParams.get('accessToken') ;
+            let headers = this.axiosHeaders
 
-            axios.post('/api/v1/accounts/store', newModel)
+            axios.post('/api/v1/accounts/store', newModel, {headers})
                 .then(function (resp) {
                     app.$router.push({name: 'accounts_index'});
-                    app.preloader = false;;
+                    app.preloader = false;
+                    ;
                 })
                 .catch(function (resp) {
                     var errors = resp.response.data.errors;
@@ -140,15 +137,15 @@ export default {
                         app.errors[row] = errors[row][0];
                     }
                 });
+
             app.preloader = false;
         },
         handleImageAdded: function (file, Editor, cursorLocation, resetUploader) {
-            var app = this;
-
             var formData = new FormData();
             formData.append("image", file);
+            let headers = this.axiosHeaders
 
-            axios.post('/api/v1/accounts/addimage', formData)
+            axios.post('/api/v1/accounts/addimage', formData, {headers})
                 .then(function (resp) {
                     const url = resp.data.url; // Get url from response
                     Editor.insertEmbed(cursorLocation, "image", url);
