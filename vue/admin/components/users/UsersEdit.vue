@@ -104,6 +104,7 @@
 import VuePreloader from '../preloader.vue';
 
 export default {
+    inject: ['axiosHeaders'],
     mounted() {
         this.getData(),
         this.getRolesList()
@@ -133,7 +134,9 @@ export default {
             app.preloader = true;
             let id = app.$route.params.id;
             app.model_id = id;
-            axios.get('/api/v1/users/' + id + '/get/')
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/users/' + id + '/get/', {headers})
                 .then(function (resp) {
                     app.model = resp.data;
                     app.preloader = false;
@@ -145,7 +148,9 @@ export default {
         getRolesList: function () {
             var app = this;
             app.preloader = true;
-            axios.get('/api/v1/users/rolelist')
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/users/rolelist', {headers})
                 .then(function (resp) {
                     app.roles = resp.data;
                     app.preloader = false;
@@ -158,7 +163,9 @@ export default {
             var app = this;
             app.preloader = true;
             var newModel = app.model;
-            axios.post('/api/v1/users/' + app.model_id + '/update', newModel)
+            let headers = this.axiosHeaders
+
+            axios.post('/api/v1/users/' + app.model_id + '/update', newModel, {headers})
                 .then(function (resp) {
                     app.$router.push({name: 'users_index'});
                 })

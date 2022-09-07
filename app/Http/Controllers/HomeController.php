@@ -7,15 +7,6 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Show the application dashboard.
@@ -24,9 +15,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $item = Wikipage::orderBy('created_at', 'desc')->first();
+        $item = Wikipage::where('menu_level', '=', 0)->first();
 
-        return view('home', [
+        return view('wikipages.show', [
             'item' => $item,
         ]);
     }

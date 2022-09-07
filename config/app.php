@@ -17,6 +17,7 @@ return [
 
     'name' => env('APP_NAME', 'Billing'),
 
+    'images' => '/uploads/images/',
     'noimage' => 'https://www.freeiconspng.com/uploads/no-image-icon-15.png',
     /*
     |--------------------------------------------------------------------------
@@ -196,6 +197,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\AccountsUserServiceProvider::class,
+        App\Providers\MenuServiceProvider::class,
     ],
 
     /*
@@ -212,6 +214,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
         'AccountsUser' => App\Helpers\AccountsUser::class,
+        'Menu' => App\Helpers\Menu::class,
     ])->toArray(),
 
 ];

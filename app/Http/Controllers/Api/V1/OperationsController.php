@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Operation\OperationResource;
 use App\Http\Resources\Operation\OperationResourceCollection;
 use App\Http\Traits\UploadTrait;
 use App\Models\Operation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OperationsController extends Controller
 {
@@ -15,6 +17,7 @@ class OperationsController extends Controller
     public function __construct()
     {
         $this->middleware('jwt');
+
     }
 
     /**
@@ -24,6 +27,9 @@ class OperationsController extends Controller
      */
     public function index(Request $request)
     {
+        $filter = $request->search;
+        $filter['user_id'] = Auth::user()->id;
+
         $query = Operation::filter($request->search)
             ->sort($request->sort)
             ->paginate(10);
@@ -62,7 +68,6 @@ class OperationsController extends Controller
         $validate = $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'parent_id' => 'numeric|nullable',
         ]);
 
         $model = Operation::create($validate);
@@ -77,7 +82,7 @@ class OperationsController extends Controller
      */
     public function get($id)
     {
-        return Operation::findOrFail($id);
+        return new OperationResource(Operation::findOrFail($id));
     }
 
 }

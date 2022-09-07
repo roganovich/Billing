@@ -35,7 +35,7 @@ Route::group([
         // Пролучить категории
         Route::get('parentlist', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'parentlist']);
         // Загрузить изображение
-        Route::post('addimage', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'addimage']);
+        Route::post('addimages', [\App\Http\Controllers\Api\V1\WikipagesController::class, 'add_images']);
     });
 
     // Страницы Users
@@ -82,6 +82,8 @@ Route::group([
     Route::group(['prefix' => 'operations'], function () {
         // Список, поиск записей
         Route::post('', [\App\Http\Controllers\Api\V1\OperationsController::class, 'index']);
+        // Получить данные записи
+        Route::get('{id}/get', [\App\Http\Controllers\Api\V1\OperationsController::class, 'get']);
         // Получить типы
         Route::get('typeslist', [\App\Http\Controllers\Api\V1\OperationsController::class, 'typeslist']);
         // Получить статусы

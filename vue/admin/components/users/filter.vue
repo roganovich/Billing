@@ -121,6 +121,7 @@
 <script>
 
 export default {
+    inject: ['axiosHeaders'],
     props: {
         itemssearch: Object,
     },
@@ -136,7 +137,9 @@ export default {
         getRolesList: function () {
             var app = this;
             app.preloader = true;
-            axios.get('/api/v1/users/rolelist')
+            let headers = this.axiosHeaders
+
+            axios.get('/api/v1/users/rolelist', {headers})
                 .then(function (resp) {
                     app.roles = resp.data;
                     app.preloader = false;

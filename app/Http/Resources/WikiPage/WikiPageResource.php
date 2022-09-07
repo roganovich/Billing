@@ -16,9 +16,10 @@ class WikiPageResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'thumb' => $this->pageThumb,
             'title' => $this->title,
-            'parent_id' => $this->parent_id,
-            'parent' => ($this->parent_id) ? $this->parent->title : '',
+            'slug' => $this->slug,
+            'menu_level' => $this->menu_level,
             'description' => $this->description,
             'updated_at' => $this->updated_at,
         ];

@@ -21,7 +21,10 @@
    - Работа со счетами
    - Работа со статьями
    - История оплат
-
+atol
+https://github.com/business-ru/atol-api-sdk-php
+alfa
+https://pay.alfabank.ru/ecommerce/instructions/merchantManual/pages/index/plugins.html
 ## Скачивание проекта
 - cd /your_sites_directory/
 - git clone git@github.com:roganovich/Billing.git

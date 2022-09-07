@@ -22,6 +22,7 @@ class OperationResource extends JsonResource
             'amount' => $this->amount,
             'balance' => $this->balance,
             'options' => $this->options,
+            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
     }

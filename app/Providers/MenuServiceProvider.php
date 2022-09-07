@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class AccountsUserServiceProvider extends ServiceProvider
+class MenuServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -13,6 +13,6 @@ class AccountsUserServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        require_once app_path() . '/Helpers/AccountsUser.php';
+        require_once app_path() . '/Helpers/Menu.php';
     }
 }

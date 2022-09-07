@@ -19,81 +19,77 @@
 
 </head>
 <body class="d-flex flex-column h-100">
-    <div class="container py-3">
-        <header>
-            <div class="d-flex flex-column flex-md-row pb-2 align-items-center">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img alt="{{ config('app.name', 'Home') }}"
-                         title="{{ config('app.name', 'Home') }}"
-                         height="25"
-                         class="d-inline-block align-text-top"
-                         src="/logo.png"/>
+    <header class="p-3 bg-dark-gray text-white">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                <a class="navbar-brand pe-1" href="{{ url('/') }}">
+                    ООО "КОМФОРТ"
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+                <svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" fill="currentColor" class="bi bi-list text-light" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
                 </button>
-                <nav class="d-flex justify-content-start">
-                    <a class="nav-link" aria-current="page" href="/">{{ __('default.home') }}</a>
-                    <span class="px-1"></span>
-                    <a class="nav-link" aria-current="page"
-                       href="{{ route('wikipages.index') }}">{{ __('wikipages.index') }}</a>
-                </nav>
-                <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
 
-                    <!-- Authentication Links -->
-                    @guest
-                        @if (Route::has('login'))
-                            <a class="nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a>
-                        @endif
+                <div class="navbar-collapse collapse " id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/">Главная</a>
+                        </li>
+                        @foreach (Menu::getList() as $link)
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page"
+                                   href="{{ route('wikipages.show', ['slug' =>$link->slug ]) }}">{{ $link->title }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <ul class="navbar-nav d-flex">
+                        <!-- Authentication Links -->
+                        @guest
+                            @if (Route::has('login'))
+                                <li class="nav-item px-1 "> <a class="nav-link" href="{{ route('login') }}">{{ __('auth.login') }}</a> </li>
+                            @endif
+                             <span class="px-1 pt-3"></span>
+                            @if (Route::has('register'))
+                                    <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">{{ __('auth.register') }}</a></li>
+                            @endif
+                        @else
+                            <li class="nav-item px-1 pt-3">
+                                    {{ Auth::user()->name }}</li>
+                            <li class="nav-item px-1 pt-3">
+                                            {{ Auth::user()->email }}</li>
 
-                        @if (Route::has('register'))
-                            <a class="nav-link" href="{{ route('register') }}">{{ __('auth.register') }}</a>
-                        @endif
-                    @else
-                        <span class="px-1">
-                                {{ Auth::user()->name }}
+                        <li class="nav-item px-1 pt-3">
+                            <span>
+                            |
                             </span>
-                        <span class="px-1">
-                                        {{ Auth::user()->email }}
-                                    </span>
-                        <span class="px-1">
-                                        |
-                                    </span>
-
-                        @if (Auth::user()->isAdmin)
-                            <a class="ps-1 pe-3" href="{{ route('admin') }}">{{ __('admin.index') }}</a>
-                        @endif
-                        @if (Auth::user()->isClient)
-                            <a class="ps-1 pe-3" href="{{ route('cabinet') }}">{{ __('cabinet.index') }}</a>
-                        @endif
-
-                        <a class="ps-1 pe-3" href="{{ route('logout') }}"
-                           onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                            {{ __('auth.logout') }}
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
-                    @endguest
-                </nav>
-            </div>
-        </header>
-
+                        </li>
+                            @if (Auth::user()->isAdmin)
+                                <li class="nav-item px-1 pt-3"> <a class="" href="{{ route('admin') }}">{{ __('admin.index') }}</a></li>
+                            @endif
+                            @if (Auth::user()->isClient)
+                                <li class="nav-item px-1 pt-3"> <a class="" href="{{ route('cabinet') }}">{{ __('cabinet.index') }}</a></li>
+                            @endif
+                            <li class="nav-item px-1 pt-3"><a class="" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                            document.getElementById('logout-form').submit();">
+                                {{ __('auth.logout') }}
+                                </a></li>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        @endguest
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
         <main class="py-4 flex-shrink-0">
             @yield('content')
         </main>
     </div>
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md">
-                    <small class="d-block mb-3 text-muted">© {{ date('Y') }} R/R Company, Inc. All rights reserved.</small>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @include('footer')
 </body>
 </html>

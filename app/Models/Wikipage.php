@@ -17,7 +17,7 @@ class Wikipage extends Model
 
     protected $table = 'wikipages';
 
-    protected $fillable = ['title', 'description', 'parent_id', 'updated_at'];
+    protected $fillable = ['title', 'slug', 'description', 'parent_id', 'menu_level','updated_at', 'thumb'];
 
     // Поиск по полям
     public function scopeFilter(Builder $builder, $request)

@@ -25,17 +25,23 @@
         <div v-else class="mt-1">
             <table class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                    <th>Заголовок</th>
-                    <th>Обновлен</th>
-                    <th>&nbsp;</th>
+                <tr class="d-flex">
+                    <th class="col-1">Изображение</th>
+                    <th class="col-1">Меню</th>
+                    <th class="col-4">Заголовок</th>
+                    <th class="col-3">Url</th>
+                    <th class="col-2">Обновлен</th>
+                    <th class="col-1">&nbsp;</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item, index in items.data">
-                    <td>{{ item.title }}</td>
-                    <td>{{ short_date(item.updated_at) }}</td>
-                    <td>
+                <tr v-for="item, index in items.data" class="d-flex">
+                    <td class="col-1"><img class="mini_thumb" v-bind:src="item.thumb"/></td>
+                    <td class="col-1">{{ item.menu_level }}</td>
+                    <td class="col-4">{{ item.title }}</td>
+                    <td class="col-3">{{ item.slug }}</td>
+                    <td class="col-2">{{ short_date(item.updated_at) }}</td>
+                    <td class="col-1">
                         <router-link
                             title="Редактировать"
                             :to="{name: 'wikipages_edit', params: {id: item.id}}"
@@ -80,6 +86,7 @@ import VuePreloader from '../preloader.vue';
 import moment from 'moment';
 
 export default {
+    inject: ['axiosHeaders'],
     data: function () {
         return {
             preloader: true,
@@ -121,7 +128,9 @@ export default {
             app.preloader = false;
             app.search = true;
             this.itemssearch.page = this.items.meta.current_page;
-            axios.post('/api/v1/wikipages', this.itemssearch)
+            let headers = this.axiosHeaders
+
+            axios.post('/api/v1/wikipages', this.itemssearch, {headers})
                 .then(function (resp) {
                     app.items = resp.data;
                     app.search = false;
@@ -134,7 +143,8 @@ export default {
             if (confirm('Вы уверены что хотите удалить? ', {title:item.title})) {
                 var app = this;
                 app.search = true;
-                axios.delete('/api/v1/wikipages/' + item.id + '/destroy')
+                let headers = this.axiosHeaders
+                axios.delete('/api/v1/wikipages/' + item.id + '/destroy', {headers})
                     .then(function (resp) {
                         app.search = false;
                         app.$router.push({name: 'wikipages_index'});

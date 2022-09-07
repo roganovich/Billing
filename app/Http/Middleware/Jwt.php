@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Auth\AuthenticationException;
 
@@ -22,6 +23,7 @@ class Jwt
             ->first();
 
         if ($user) {
+            Auth::loginUsingId($user->tokenable_id);
             return $next($request);
         }
 

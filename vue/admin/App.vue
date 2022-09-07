@@ -72,11 +72,14 @@
 <script>
 export default {
     provide:{
-        auth: {},
-        isLoggedin: false,
+        auth: window.Laravel.user,
+        isLoggedin: window.Laravel.isLoggedin,
+        axiosHeaders: {
+            Authorization: 'Bearer ' + window.Laravel.accessToken,
+            Section: 'Admin-Auth'
+        }
     },
     created() {
-        this.auth = window.Laravel.user;
         this.isLoggedin = window.Laravel.isLoggedin;
     },
 }

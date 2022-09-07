@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\WikiPage\OperationResourceCollection;
+use App\Http\Resources\WikiPage\WikiPageResourceCollection;
 use App\Http\Traits\UploadTrait;
 use App\Models\Wikipage;
 use Illuminate\Http\Request;
@@ -28,19 +28,8 @@ class WikipagesController extends Controller
             ->sort($request->sort)
             ->paginate(10);
 
-        return new OperationResourceCollection($query);
+        return new WikiPageResourceCollection($query);
     }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function parentlist()
-    {
-        return new OperationResourceCollection(Wikipage::select('id', 'title')->orderBy('title', 'ASC')->get());
-    }
-
 
     /**
      * Store a newly created resource in storage.
@@ -51,9 +40,11 @@ class WikipagesController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
+            'menu_level' => 'numeric|nullable',
             'title' => 'required|max:255',
+            'slug' => 'required|max:255',
             'description' => 'required',
-            'parent_id' => 'numeric|nullable',
+            'thumb' => '',
         ]);
 
         $model = Wikipage::create($validate);
@@ -68,7 +59,7 @@ class WikipagesController extends Controller
      */
     public function get($id)
     {
-        return Wikipage::select('id', 'title', 'parent_id', 'description')->findOrFail($id);
+        return Wikipage::select('id', 'title', 'slug', 'menu_level', 'description')->findOrFail($id);
     }
 
     /**
@@ -81,9 +72,11 @@ class WikipagesController extends Controller
     public function update(Request $request, $id)
     {
         $validate = $request->validate([
+            'menu_level' => 'numeric|nullable',
             'title' => 'required|max:255',
+            'slug' => 'required|max:255',
             'description' => 'required',
-            'parent_id' => 'numeric|nullable',
+            'thumb' => '',
         ]);
 
         $model = Wikipage::findOrFail($id);
@@ -102,30 +95,5 @@ class WikipagesController extends Controller
     {
         $model = Wikipage::findOrFail($id);
         $model->delete();
-    }
-
-    public function addimage(Request $request)
-    {
-        // Form validation
-        $request->validate([
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        // Check if a profile image has been uploaded
-        if ($request->has('image')) {
-            // Get image file
-            $image = $request->file('image');
-            // Make a image name based on user name and current timestamp
-            $name = md5(time());
-            // Define folder path
-            $folder = '/uploads/images/wikipages/';
-            // Make a file path where image will be stored [ folder path + file name + file extension]
-            $filePath = $folder . $name . '.' . $image->getClientOriginalExtension();
-            // Upload image
-            $this->uploadOne($image, $folder, 'public', $name);
-
-            return json_encode(['url' => $filePath]);
-        }
-
     }
 }

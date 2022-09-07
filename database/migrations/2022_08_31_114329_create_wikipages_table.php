@@ -17,8 +17,13 @@ return new class extends Migration
             $table->id();
             $table->integer('parent_id')->nullable(); ;
             $table->string('title');
-            $table->longText('description');
+            $table->string('slug');
+            $table->longText('description')->nullable();
+            $table->string('header')->nullable();
+            $table->longText('preview')->nullable();
             $table->string('thumb')->nullable();
+            $table->longText('seo_description')->nullable();
+            $table->longText('seo_keywords')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

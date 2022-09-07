@@ -9,6 +9,7 @@ use App\Models\Account;
 use App\Models\Operation;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AccountsController extends Controller
 {
@@ -24,7 +25,10 @@ class AccountsController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Account::filter($request->search)
+        $filter = $request->search;
+        $filter['user_id'] = Auth::user()->id;
+
+        $query = Account::filter($filter)
             ->sort($request->sort)
             ->paginate(10);
 
@@ -61,10 +65,11 @@ class AccountsController extends Controller
     {
         $validate = $request->validate([
             'type_id' => 'required',
-            'user_id' => 'required',
             'title' => 'max:256|required',
             'description' => 'max:256|nullable',
         ]);
+        $validate['user_id'] = Auth::user()->id;
+
         $count = Account::withTrashed()->count();
 
         $newId = $count + 1;

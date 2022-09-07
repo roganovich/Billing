@@ -93,14 +93,14 @@ class User extends Authenticatable
         $existingToken = $this->tokens()
             ->where('tokenable_type', '=', self::class)
             ->where('tokenable_id', '=', $this->id)
-            ->where('name', '=', self::TOKEN_CABINET)
+            ->where('name', '=', $section_name)
             ->first();
 
         if ($existingToken) {
             return $existingToken->token;
         }
 
-        $accessToken = $this->createToken(self::TOKEN_CABINET)->accessToken;
+        $accessToken = $this->createToken($section_name)->accessToken;
 
         return $accessToken->token;
     }

@@ -1,16 +1,19 @@
 {
   "resources/js/bootstrap.js": {
-    "file": "assets/bootstrap.a97aa3ac.js",
+    "file": "assets/bootstrap.17b932ac.js",
     "src": "resources/js/bootstrap.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_index.14082f20.js"
+    ]
   },
   "resources/js/app.js": {
-    "file": "assets/app.057b703a.js",
+    "file": "assets/app.b10358d1.js",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "resources/js/bootstrap.js",
-      "__plugin-vue_export-helper.075dfc7c.js"
+      "__plugin-vue_export-helper.d0df7295.js",
+      "_index.14082f20.js"
     ]
   },
   "resources/sass/admin.scss": {
@@ -19,11 +22,13 @@
     "isEntry": true
   },
   "resources/js/admin.js": {
-    "file": "assets/admin.1fd213e8.js",
+    "file": "assets/admin.332f06c7.js",
     "src": "resources/js/admin.js",
     "isEntry": true,
     "imports": [
-      "__plugin-vue_export-helper.075dfc7c.js"
+      "__plugin-vue_export-helper.d0df7295.js",
+      "_vue3-editor.common.2e582382.js",
+      "_index.14082f20.js"
     ]
   },
   "resources/sass/cabinet.scss": {
@@ -32,18 +37,33 @@
     "isEntry": true
   },
   "resources/js/cabinet.js": {
-    "file": "assets/cabinet.ec3fcabf.js",
+    "file": "assets/cabinet.85848855.js",
     "src": "resources/js/cabinet.js",
     "isEntry": true,
     "imports": [
-      "__plugin-vue_export-helper.075dfc7c.js"
+      "__plugin-vue_export-helper.d0df7295.js",
+      "_vue3-editor.common.2e582382.js",
+      "_index.14082f20.js"
     ]
   },
-  "__plugin-vue_export-helper.075dfc7c.js": {
-    "file": "assets/_plugin-vue_export-helper.075dfc7c.js"
+  "_index.14082f20.js": {
+    "file": "assets/index.14082f20.js"
+  },
+  "__plugin-vue_export-helper.d0df7295.js": {
+    "file": "assets/_plugin-vue_export-helper.d0df7295.js",
+    "imports": [
+      "_index.14082f20.js"
+    ]
+  },
+  "_vue3-editor.common.2e582382.js": {
+    "file": "assets/vue3-editor.common.2e582382.js",
+    "imports": [
+      "__plugin-vue_export-helper.d0df7295.js",
+      "_index.14082f20.js"
+    ]
   },
   "resources/sass/app.scss": {
-    "file": "assets/app.7720662b.css",
+    "file": "assets/app.28e735b7.css",
     "src": "resources/sass/app.scss",
     "isEntry": true
   }

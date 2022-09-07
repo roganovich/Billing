@@ -31,6 +31,7 @@
                     <th>Email</th>
                     <th>Верифицирован</th>
                     <th>Создан</th>
+                    <th>Обновлен</th>
                     <th>&nbsp;</th>
                 </tr>
                 </thead>
@@ -41,6 +42,7 @@
                     <td>{{ item.email }}</td>
                     <td>{{ bool_to_text(item.email_verified_at) }}</td>
                     <td>{{ short_date(item.created_at) }}</td>
+                    <td>{{ short_date(item.updated_at) }}</td>
                     <td>
                         <router-link
                             title="Редактировать"
@@ -87,6 +89,7 @@ import VuePreloader from '../preloader.vue';
 import moment from 'moment';
 
 export default {
+    inject: ['axiosHeaders'],
     data: function () {
         return {
             pageTitle: 'Список пользователей',
@@ -134,7 +137,9 @@ export default {
             app.preloader = false;
             app.search = true;
             this.itemssearch.page = this.items.meta.current_page;
-            axios.post('/api/v1/users', this.itemssearch)
+            let headers = this.axiosHeaders
+
+            axios.post('/api/v1/users', this.itemssearch, {headers})
                 .then(function (resp) {
                     app.items = resp.data;
                     app.search = false;
@@ -147,7 +152,9 @@ export default {
             if (confirm('Вы уверены что хотите удалить? ', {title:item.title})) {
                 var app = this;
                 app.search = true;
-                axios.delete('/api/v1/users/' + item.id + '/destroy')
+                let headers = this.axiosHeaders
+
+                axios.delete('/api/v1/users/' + item.id + '/destroy', {headers})
                     .then(function (resp) {
                         app.search = false;
                         app.$router.push({name: 'users_index'});

@@ -8,44 +8,52 @@
         <vue-preloader></vue-preloader>
     </div>
     <div v-else class=" mt-1">
-        <div class="card-title mt-1">Редактируем {{ model.code }} ({{ model.title }})</div>
-        <div class="p-1">
-            <form v-on:submit.prevent="saveForm()">
-                <div class="row">
-                    <div class="col-xs-12 form-group">
-                        <label class="control-label">Заголовок</label>
-                        <input type="text"
-                               v-model="model.title"
-                               class="form-control"
-                               v-bind:class="{ 'is-invalid': errors.title }">
-                        <div class="invalid-feedback" v-if="errors.title">
-                            {{ errors.title }}
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title mt-1">Информация по операции {{ model.id }}</h2>
+            </div>
+            <div class="card-body">
+                <ol class="list-group-">
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Счет</div>
+                            <p class="card-text">
+                                <router-link :to="{name: 'accounts_view', params: {id: model.account.id}}" title="Назад">{{ model.account.code }}</router-link>
+                            </p>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12 form-group">
-                        <label class="control-label">Описание</label>
-                        <vue-editor
-                            id="editor"
-                            useCustomImageHandler
-                            @imageAdded="handleImageAdded"
-                            class="form-control"
-                            v-bind:class="{ 'is-invalid': errors.description }"
-                            v-model="model.description"
-                        >
-                        </vue-editor>
-                        <div class="invalid-feedback" v-if="errors.description">
-                            {{ errors.description }}
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Тип</div>
+                            <p class="card-text">{{ model.type }}</p>
                         </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-xs-12 form-group">
-                        <button class="btn btn-success">Сохранить</button>
-                    </div>
-                </div>
-            </form>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Статус</div>
+                            <p class="card-text">{{ model.status }}</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Сумма</div>
+                            <p class="card-text">{{ model.amount }}</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Баланс</div>
+                            <p class="card-text">{{ model.balance }}</p>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Дата</div>
+                            <p>{{ short_date(model.created_at) }}</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
         </div>
     </div>
 </template>
@@ -53,6 +61,7 @@
 <script>
 import VuePreloader from '../preloader.vue';
 import {VueEditor} from "vue3-editor";
+import moment from "moment";
 export default {
     inject: ['axiosHeaders'],
     mounted() {
@@ -66,11 +75,13 @@ export default {
         return {
             preloader: true,
             errors: {},
-            model_id: null,
             model: {
-                id: '',
-                title: '',
-                description: '',
+                id: null,
+                type: null,
+                status: null,
+                account: null,
+                balance: null,
+                created_at: null,
             }
         }
     },
@@ -82,33 +93,17 @@ export default {
             app.model_id = id;
             let headers = this.axiosHeaders
 
-            axios.get('/api/v1/accounts/' + id + '/get/', {headers})
+            axios.get('/api/v1/operations/' + id + '/get/', {headers})
                 .then(function (resp) {
-                    app.model = resp.data;
+                    app.model = resp.data.data;
                     app.preloader = false;
                 })
                 .catch(function () {
                     alert('Ошибка')
                 });
         },
-        saveForm(e) {
-            var app = this;
-            app.preloader = true;
-            var newModel = app.model;
-            let headers = this.axiosHeaders
-
-            axios.post('/api/v1/accounts/' + app.model_id + '/update', newModel, {headers})
-                .then(function (resp) {
-                    app.$router.push({name: 'accounts_index'});
-                })
-                .catch(function (resp) {
-                    var errors = resp.response.data.errors;
-                    for (var row in errors) {
-                        app.errors[row] = errors[row][0];
-                    }
-                });
-
-            app.preloader = false;
+        short_date(date) {
+            return (date) ? moment(String(date)).format('DD.MM.YYYY hh:mm') : '';
         },
     }
 }

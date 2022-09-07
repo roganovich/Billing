@@ -67,22 +67,8 @@
             </div>
         </nav>
     </header>
-    @if (Auth::check())
-        @php
-            $user_auth_data = [
-                'isLoggedin' => true,
-                'user' =>  Auth::user()
-            ];
-        @endphp
-    @else
-        @php
-            $user_auth_data = [
-                'isLoggedin' => false
-            ];
-        @endphp
-    @endif
     <script>
-        window.Laravel = JSON.parse(atob('{{ base64_encode(json_encode($user_auth_data)) }}'));
+        window.Laravel = JSON.parse(atob('{{ AccountsUser::getVueAuth(\App\Models\User::TOKEN_ADMIN)}}'));
     </script>
 
     <main id="admin" class="container-fluid py-4 flex-shrink-0 mt-5">
