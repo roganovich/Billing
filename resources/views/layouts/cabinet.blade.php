@@ -7,8 +7,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
+    <title>Личный кабинет | {{ config('app.name', '') }}</title>
+    <meta name="description" content="{{ config('app.description', '') }}">
+    <meta name="keywords" content="{{ config('app.keywords', '') }}">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">

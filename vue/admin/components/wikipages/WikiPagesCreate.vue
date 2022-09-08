@@ -1,14 +1,22 @@
 <template>
-    <div class="p-1">
-        <div class="form-group mt-1">
-            <router-link :to="{name: 'wikipages_index'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
-        </div>
-    </div>
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
-    <div v-else class=" mt-1">
-        <div class="card-title mt-1">Создание</div>
+    <div v-else>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'admin'}"  title="Панель">Панель</router-link>
+                </li>
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'wikipages_index'}"  title="Статьи">Статьи</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Создание
+                </li>
+            </ol>
+        </nav>
+        <h1>Создание</h1>
         <div class="p-1">
             <form v-on:submit.prevent="saveForm()">
                 <div class="row">
@@ -54,6 +62,7 @@
                             id="editor"
                             useCustomImageHandler
                             @imageAdded="handleImageAdded"
+                            :editorToolbar="customToolbar"
                             class="form-control"
                             v-bind:class="{ 'is-invalid': errors.description }"
                             v-model="model.description"
@@ -61,6 +70,54 @@
                         </vue-editor>
                         <div class="invalid-feedback" v-if="errors.description">
                             {{ errors.description }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label">Шапка</label>
+                        <input type="text"
+                               v-model="model.header"
+                               class="form-control"
+                               v-bind:class="{ 'is-invalid': errors.header }">
+                        <div class="invalid-feedback" v-if="errors.header">
+                            {{ errors.header }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label">Превью</label>
+                        <textarea
+                               v-model="model.preview"
+                               class="form-control"
+                               v-bind:class="{ 'is-invalid': errors.preview }"></textarea>
+                        <div class="invalid-feedback" v-if="errors.preview">
+                            {{ errors.preview }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label">Seo Description</label>
+                        <input type="text"
+                               v-model="model.seo_description"
+                               class="form-control"
+                               v-bind:class="{ 'is-invalid': errors.seo_description }">
+                        <div class="invalid-feedback" v-if="errors.seo_description">
+                            {{ errors.seo_description }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12 form-group">
+                        <label class="control-label">Seo sKeywords</label>
+                        <input type="text"
+                               v-model="model.seo_keywords"
+                               class="form-control"
+                               v-bind:class="{ 'is-invalid': errors.seo_keywords }">
+                        <div class="invalid-feedback" v-if="errors.seo_keywords">
+                            {{ errors.seo_keywords }}
                         </div>
                     </div>
                 </div>
@@ -97,6 +154,27 @@ export default {
     },
     data: function () {
         return {
+            customToolbar:  [
+                [{ font: [] }],
+                [{ header: [false, 1, 2, 3, 4, 5, 6] }],
+                [{ size: ["small", false, "large", "huge"] }],
+                ["bold", "italic", "underline", "strike"],
+                [
+                    { align: "" },
+                    { align: "center" },
+                    { align: "right" },
+                    { align: "justify" }
+                ],
+                [{ header: 1 }, { header: 2 }],
+                ["blockquote", "code-block"],
+                [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+                [{ indent: "-1" }, { indent: "+1" }],
+                [{ color: [] }, { background: [] }],
+                ["link", "image"],
+                [{ direction: "rtl" }],
+                ["clean"],
+                ["SourceCode"]
+            ],
             preloader: false,
             errors: {},
             model_id: null,
@@ -105,7 +183,10 @@ export default {
                 menu_level: null,
                 slug: null,
                 title: null,
-                description: null,
+                header: null,
+                preview: null,
+                seo_description: null,
+                seo_keywords: null,
                 thumb: null,
             }
         }

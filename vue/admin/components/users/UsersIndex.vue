@@ -2,11 +2,18 @@
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
-
     <div v-else>
-        <div class="mt-1">
-            <h5 class="card-title">{{ pageTitle }}</h5>
-        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'admin'}"  title="Панель">Панель</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Пользователи
+                </li>
+            </ol>
+        </nav>
+        <h1>Пользователи</h1>
         <div class="mt-1">
             <div class="form-group">
                 <router-link :to="{name: 'users_create'}" class="btn btn-success">Создать</router-link>
@@ -92,7 +99,6 @@ export default {
     inject: ['axiosHeaders'],
     data: function () {
         return {
-            pageTitle: 'Список пользователей',
             preloader: true,
             search: true,
             items: {

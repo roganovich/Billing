@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
+@section('title', config('app.name', ''))
+@section('meta_keywords', config('app.keywords', ''))
+@section('meta_description', config('app.description', ''))
+
 @section('content')
+
     <div class="pricing-header mx-auto text-center">
         <img src="https://www.insuranceclaimprocessing.co.uk/blog/wp-content/uploads/2018/11/Role-of-medical-billing-in-the-healthcare-industry.jpg" class="img-fluid"/>
         <h1 class="display-4 fw-normal">{{ config('app.name', 'Laravel') }}</h1>

@@ -2,11 +2,18 @@
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
-
     <div v-else>
-        <div class="mt-1">
-            <h5 class="card-title">Статьи</h5>
-        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'admin'}"  title="Панель">Панель</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Статьи
+                </li>
+            </ol>
+        </nav>
+        <h1>Статьи</h1>
         <div class="mt-1">
             <div class="form-group">
                 <router-link :to="{name: 'wikipages_create'}" class="btn btn-success">Создать</router-link>
@@ -36,7 +43,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="item, index in items.data" class="d-flex">
-                    <td class="col-1"><img class="mini_thumb" v-bind:src="item.thumb"/></td>
+                    <td class="col-1"><img class="img-fluid" v-bind:src="item.thumb"/></td>
                     <td class="col-1">{{ item.menu_level }}</td>
                     <td class="col-4">{{ item.title }}</td>
                     <td class="col-3">{{ item.slug }}</td>

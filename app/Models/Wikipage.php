@@ -17,7 +17,19 @@ class Wikipage extends Model
 
     protected $table = 'wikipages';
 
-    protected $fillable = ['title', 'slug', 'description', 'parent_id', 'menu_level','updated_at', 'thumb'];
+    protected $fillable = [
+        'title',
+        'slug',
+        'description',
+        'parent_id',
+        'menu_level',
+        'header',
+        'preview',
+        'seo_description',
+        'seo_keywords',
+        'updated_at',
+        'thumb'
+    ];
 
     // Поиск по полям
     public function scopeFilter(Builder $builder, $request)
@@ -64,7 +76,7 @@ class Wikipage extends Model
         }
         if (!array_key_exists($this->id, $tree)) {
             $tree[] = $this->parent;
-        }else{
+        } else {
             return $tree;
         }
 

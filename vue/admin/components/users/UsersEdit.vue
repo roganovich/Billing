@@ -1,14 +1,22 @@
 <template>
-    <div class="p-1">
-        <div class="form-group mt-1">
-            <router-link :to="{name: 'users_index'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
-        </div>
-    </div>
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
-    <div v-else class=" mt-1">
-        <div class="card-title mt-1">Редактируем {{ model.name }}</div>
+    <div v-else>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'admin'}"  title="Панель">Панель</router-link>
+                </li>
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'users_index'}"  title="Пользователи">Пользователи</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ model.name }}
+                </li>
+            </ol>
+        </nav>
+        <h1>Редактируем "{{ model.name }}"</h1>
         <div class="p-1">
             <form v-on:submit.prevent="saveForm()">
                 <div class="row">

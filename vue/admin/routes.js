@@ -8,6 +8,11 @@ import UsersCreate from './components/users/UsersCreate.vue';
 import UsersEdit from './components/users/UsersEdit.vue';
 
 export const routes = [
+    {
+        name: 'admin',
+        path: '/admin',
+        component: WikiPagesIndex,
+    },
     /** Wikipages */
     {
         name: 'wikipages_index',

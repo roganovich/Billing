@@ -44,6 +44,10 @@ class WikipagesController extends Controller
             'title' => 'required|max:255',
             'slug' => 'required|max:255',
             'description' => 'required',
+            'header' => 'max:255|nullable',
+            'preview' => 'nullable',
+            'seo_description' => 'max:255|nullable',
+            'seo_keywords' => 'max:255|nullable',
             'thumb' => '',
         ]);
 
@@ -59,7 +63,7 @@ class WikipagesController extends Controller
      */
     public function get($id)
     {
-        return Wikipage::select('id', 'title', 'slug', 'menu_level', 'description')->findOrFail($id);
+        return Wikipage::findOrFail($id);
     }
 
     /**
@@ -76,6 +80,10 @@ class WikipagesController extends Controller
             'title' => 'required|max:255',
             'slug' => 'required|max:255',
             'description' => 'required',
+            'header' => 'max:255|nullable',
+            'preview' => 'nullable',
+            'seo_description' => 'max:255|nullable',
+            'seo_keywords' => 'max:255|nullable',
             'thumb' => '',
         ]);
 

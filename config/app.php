@@ -15,8 +15,9 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Billing'),
-
+    'name' => 'ООО "КОМФОРТ"',
+    'keywords' => 'ООО "КОМФОРТ"',
+    'description' => 'ООО "КОМФОРТ"',
     'images' => '/uploads/images/',
     'noimage' => 'https://www.freeiconspng.com/uploads/no-image-icon-15.png',
     /*

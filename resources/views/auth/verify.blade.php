@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Регистрация | '. config('app.name', ''))
+@section('meta_keywords', config('app.keywords', '') )
+@section('meta_description', config('app.description', '') )
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
