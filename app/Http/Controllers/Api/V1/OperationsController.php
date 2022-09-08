@@ -30,7 +30,11 @@ class OperationsController extends Controller
         $filter = $request->search;
         $filter['user_id'] = Auth::user()->id;
 
-        $query = Operation::filter($request->search)
+        $query = Operation::select('accounts.user_id as user_id', 'operations.*')
+            ->join('accounts', function ($join) {
+                $join->on('accounts.id', '=', 'operations.account_id');
+            })
+            ->filter($filter)
             ->sort($request->sort)
             ->paginate(10);
 
@@ -82,7 +86,16 @@ class OperationsController extends Controller
      */
     public function get($id)
     {
-        return new OperationResource(Operation::findOrFail($id));
+        $filter['user_id'] = Auth::user()->id;
+        $filter['id'] = $id;
+        $query = Operation::select('accounts.user_id as user_id', 'operations.*')
+            ->join('accounts', function ($join) {
+                $join->on('accounts.id', '=', 'operations.account_id');
+            })
+            ->filter($filter)->paginate(false);
+        $collection = new OperationResourceCollection($query);
+
+        return $collection->get(0);
     }
 
 }

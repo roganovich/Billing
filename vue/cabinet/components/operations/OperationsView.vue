@@ -1,13 +1,22 @@
 <template>
-    <div class="p-1">
-        <div class="form-group mt-1">
-            <router-link :to="{name: 'accounts_index'}" class="btn btn-dark btn-sm" title="Назад">Назад</router-link>
-        </div>
-    </div>
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
     <div v-else class=" mt-1">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'cabinet'}" title="Кабинет">Кабинет</router-link>
+            </li>
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'accounts_index'}" title="Мои счета">Мои счета</router-link>
+            </li>
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'accounts_view', params: {id: model.account.id}}"  title="Мои счета">{{ model.account.code }}</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {{ model.id }}
+            </li>
+        </ol>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title mt-1">Информация по операции {{ model.id }}</h2>

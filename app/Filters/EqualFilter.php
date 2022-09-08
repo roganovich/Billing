@@ -7,6 +7,6 @@ class EqualFilter
     public function filter($builder, $value, $filter = null)
     {
         if ($filter && $value)
-            return $builder->where($filter, $value);
+            return $builder->where($builder->from.'.'.$filter, $value);
     }
 }

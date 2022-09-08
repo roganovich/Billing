@@ -3,6 +3,17 @@
         <vue-preloader></vue-preloader>
     </div>
     <div v-else class=" mt-1">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'cabinet'}"  title="Кабинет">Кабинет</router-link>
+            </li>
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'accounts_index'}"  title="Мои счета">Мои счета</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                {{ model.code }}
+            </li>
+        </ol>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title mt-1">Редактируем {{ model.code }} ({{ model.title }})</h2>

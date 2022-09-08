@@ -4,6 +4,14 @@
     </div>
 
     <div v-else>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'cabinet'}"  title="Кабинет">Кабинет</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Операций
+            </li>
+        </ol>
         <div class="card-header">
             <h2 class="card-title mt-1">История операций</h2>
         </div>

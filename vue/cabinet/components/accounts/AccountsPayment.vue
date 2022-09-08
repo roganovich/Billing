@@ -2,7 +2,18 @@
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
-    <div v-else class=" mt-1">
+    <div v-else>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'cabinet'}"  title="Кабинет">Кабинет</router-link>
+            </li>
+            <li class="breadcrumb-item">
+                <router-link :to="{name: 'accounts_index'}"  title="Мои счета">Мои счета</router-link>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                Новый взнос
+            </li>
+        </ol>
         <div class="card">
             <div class="card-header">
                 <h2 class="card-title mt-1">Новый взнос по счету</h2>
@@ -99,8 +110,10 @@ export default {
 
             axios.get('/api/v1/accounts/' + id + '/get/', {headers})
                 .then(function (resp) {
-                    app.model = resp.data;
-                    app.preloader = false;
+                    if(resp.data){
+                        app.model = resp.data;
+                        app.preloader = false;
+                    }
                 })
                 .catch(function () {
                     alert('Ошибка')
@@ -108,13 +121,11 @@ export default {
         },
         getTypesList: function () {
             var app = this;
-            app.preloader = true;
             let headers = this.axiosHeaders;
 
             axios.get('/api/v1/operations/typeslist', {headers})
                 .then(function (resp) {
                     app.types = resp.data;
-                    app.preloader = false;
                 })
                 .catch(function (resp) {
                     alert('Ошибка');

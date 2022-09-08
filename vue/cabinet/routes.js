@@ -12,6 +12,11 @@ import OperationsIndex from './components/operations/OperationsIndex.vue';
 import OperationsView from './components/operations/OperationsView.vue';
 
 export const routes = [
+    {
+        name: 'cabinet',
+        path: '/cabinet',
+        component: UsersCurrent,
+    },
     /** Users */
     {
         name: 'users_current',

@@ -123,7 +123,10 @@ class AccountsController extends Controller
      */
     public function get($id)
     {
-        return Account::findOrFail($id);
+        $filter['user_id'] = Auth::user()->id;
+        $filter['id'] = $id;
+
+        return Account::where($filter)->first();
     }
 
     /**
@@ -134,7 +137,10 @@ class AccountsController extends Controller
      */
     public function payment($id)
     {
-        return Account::findOrFail($id);
+        $filter['user_id'] = Auth::user()->id;
+        $filter['id'] = $id;
+
+        return Account::where($filter)->first();
     }
 
 

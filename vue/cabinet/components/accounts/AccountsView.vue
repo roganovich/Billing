@@ -3,9 +3,22 @@
         <vue-preloader></vue-preloader>
     </div>
     <div v-else class=" mt-1">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'cabinet'}"  title="Кабинет">Кабинет</router-link>
+                </li>
+                <li class="breadcrumb-item">
+                    <router-link :to="{name: 'accounts_index'}"  title="Мои счета">Мои счета</router-link>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{ model.code }}
+                </li>
+            </ol>
+        </nav>
         <div class="card">
             <div class="card-header">
-                <h2 class="card-title mt-1">Информация</h2>
+                <h2 class="card-title mt-1">Информация по счету</h2>
             </div>
             <div class="card-body">
                 <vue-view :model="model"></vue-view>
