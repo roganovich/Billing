@@ -3,17 +3,14 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Operation\OperationResource;
 use App\Http\Resources\Operation\OperationResourceCollection;
-use App\Http\Traits\UploadTrait;
 use App\Models\Operation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class OperationsController extends Controller
 {
-    use UploadTrait;
-
     public function __construct()
     {
         $this->middleware('jwt');
@@ -29,6 +26,15 @@ class OperationsController extends Controller
     {
         $filter = $request->search;
         $filter['user_id'] = Auth::user()->id;
+
+        $validator = Validator::make($filter, [
+            'account_id' => 'required',
+            'user_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            abort(403, 'Нет прав для просмотра этой страницы');
+        }
 
         $query = Operation::select('accounts.user_id as user_id', 'operations.*')
             ->join('accounts', function ($join) {
@@ -86,13 +92,25 @@ class OperationsController extends Controller
      */
     public function get($id)
     {
-        $filter['user_id'] = Auth::user()->id;
+
         $filter['id'] = $id;
+        $filter['user_id'] = Auth::user()->id;
+
+        $validator = Validator::make($filter, [
+            'user_id' => 'required',
+            'id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            abort(403, 'Нет прав для просмотра этой страницы');
+        }
+
         $query = Operation::select('accounts.user_id as user_id', 'operations.*')
             ->join('accounts', function ($join) {
                 $join->on('accounts.id', '=', 'operations.account_id');
             })
             ->filter($filter)->paginate(false);
+
         $collection = new OperationResourceCollection($query);
 
         return $collection->get(0);

@@ -5,26 +5,41 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Users\UsersResourceCollection;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Arr;
 
 class UsersController extends Controller
 {
+    protected $filter = [];
+    protected $soft = [];
 
     public function __construct()
     {
         $this->middleware('jwt');
     }
-
+    /**
+     * Обабатываем запрос до передаци в action
+     */
+    private function getControllerAction(Request $request)
+    {
+        if ($request->search) {
+            $this->filter = $request->search;
+        }
+        if ($request->sort) {
+            $this->sort = $request->sort;
+        }
+        $this->filter['user_id'] = Auth::user()->id;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $query = User::filter($request->search)
-            ->sort($request->sort)
+        $query = User::filter($this->filter)
+            ->sort($this->sort)
             ->paginate(20);
 
         return new UsersResourceCollection($query);
@@ -71,8 +86,7 @@ class UsersController extends Controller
      */
     public function current(Request $request)
     {
-        $id = auth()->id();
-        return User::findOrFail($id);
+        return Auth::user();
     }
 
     /**
@@ -109,6 +123,9 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
+        if(!Auth::user()->isAdmin)
+            abort(403);
+
         $model = User::findOrFail($id);
         $model->delete();
     }

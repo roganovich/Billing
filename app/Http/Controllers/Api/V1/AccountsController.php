@@ -13,9 +13,26 @@ use Illuminate\Support\Facades\Auth;
 
 class AccountsController extends Controller
 {
-    public function __construct()
+    protected $filter = [];
+    protected $sort = [];
+
+    public function __construct(Request $request)
     {
         $this->middleware('jwt');
+    }
+
+    /**
+     * Обабатываем запрос до передаци в action
+    */
+    private function getControllerAction(Request $request)
+    {
+        if ($request->search) {
+            $this->filter = $request->search;
+        }
+        if ($request->sort) {
+            $this->sort = $request->sort;
+        }
+        $this->filter['user_id'] = Auth::user()->id;
     }
 
     /**
@@ -23,13 +40,10 @@ class AccountsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $filter = $request->search;
-        $filter['user_id'] = Auth::user()->id;
-
-        $query = Account::filter($filter)
-            ->sort($request->sort)
+        $query = Account::filter($this->filter)
+            ->sort($this->sort)
             ->paginate(10);
 
         return new AccountResourceCollection($query);
@@ -68,7 +82,7 @@ class AccountsController extends Controller
             'title' => 'max:256|required',
             'description' => 'max:256|nullable',
         ]);
-        $validate['user_id'] = Auth::user()->id;
+        $validate['user_id'] = $this->filter['user_id'];
 
         $count = Account::withTrashed()->count();
 
@@ -123,10 +137,9 @@ class AccountsController extends Controller
      */
     public function get($id)
     {
-        $filter['user_id'] = Auth::user()->id;
-        $filter['id'] = $id;
+        $this->filter['id'] = $id;
 
-        return Account::where($filter)->first();
+        return Account::where($this->filter)->first();
     }
 
     /**
@@ -137,10 +150,9 @@ class AccountsController extends Controller
      */
     public function payment($id)
     {
-        $filter['user_id'] = Auth::user()->id;
-        $filter['id'] = $id;
+        $this->filter['id'] = $id;
 
-        return Account::where($filter)->first();
+        return Account::where($this->filter)->first();
     }
 
 
