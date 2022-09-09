@@ -75,17 +75,20 @@ export default {
         },
         getResults: function () {
             var app = this;
-            this.itemssearch.search.account_id = app.model.id;
-            this.itemssearch.page = this.items.meta.current_page;
-            let headers = this.axiosHeaders;
+            if (app.model) {
+                this.itemssearch.search.account_id = app.model.id;
+                this.itemssearch.page = this.items.meta.current_page;
+                let headers = this.axiosHeaders;
 
-            axios.post('/api/v1/operations', this.itemssearch, {headers})
-                .then(function (resp) {
-                    app.items = resp.data;
-                })
-                .catch(function (resp) {
-                    alert('Ошибка');
-                });
+                axios.post('/api/v1/operations', this.itemssearch, {headers})
+                    .then(function (resp) {
+                        app.items = resp.data;
+                    })
+                    .catch(function (resp) {
+                        alert('Ошибка');
+                    });
+            }
+
         },
         short_date(date) {
             return (date) ? moment(String(date)).format('DD.MM.YYYY hh:mm:ss') : '';

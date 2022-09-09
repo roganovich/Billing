@@ -2,7 +2,7 @@
     <div v-if="preloader">
         <vue-preloader></vue-preloader>
     </div>
-    <div v-else class=" mt-1">
+    <div v-else >
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item">
@@ -11,12 +11,12 @@
                 <li class="breadcrumb-item">
                     <router-link :to="{name: 'accounts_index'}"  title="Мои счета">Мои счета</router-link>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">
+                <li class="breadcrumb-item active" aria-current="page" v-if="model">
                     {{ model.code }}
                 </li>
             </ol>
         </nav>
-        <div class="card">
+        <div class="card" v-if="model">
             <div class="card-header">
                 <h2 class="card-title mt-1">Информация по счету</h2>
             </div>
@@ -29,6 +29,9 @@
             <div class="card-body">
                 <vue-operations :model="model"></vue-operations>
             </div>
+        </div>
+        <div v-else>
+            <div class="alert alert-warning">Нет информации</div>
         </div>
     </div>
 </template>

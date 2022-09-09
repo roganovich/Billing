@@ -27,15 +27,6 @@ class OperationsController extends Controller
         $filter = $request->search;
         $filter['user_id'] = Auth::user()->id;
 
-        $validator = Validator::make($filter, [
-            'account_id' => 'required',
-            'user_id' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            abort(403, 'Нет прав для просмотра этой страницы');
-        }
-
         $query = Operation::select('accounts.user_id as user_id', 'operations.*')
             ->join('accounts', function ($join) {
                 $join->on('accounts.id', '=', 'operations.account_id');
