@@ -25,7 +25,10 @@ class OperationsController extends Controller
     public function index(Request $request)
     {
         $filter = $request->search;
-        $filter['user_id'] = Auth::user()->id;
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
 
         $query = Operation::select('accounts.user_id as user_id', 'operations.*')
             ->join('accounts', function ($join) {
@@ -85,15 +88,17 @@ class OperationsController extends Controller
     {
 
         $filter['id'] = $id;
-        $filter['user_id'] = Auth::user()->id;
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+            $validator = Validator::make($filter, [
+                'user_id' => 'required',
+                'id' => 'required',
+            ]);
 
-        $validator = Validator::make($filter, [
-            'user_id' => 'required',
-            'id' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            abort(403, 'Нет прав для просмотра этой страницы');
+            if ($validator->fails()) {
+                abort(403, 'Нет прав для просмотра этой страницы');
+            }
         }
 
         $query = Operation::select('accounts.user_id as user_id', 'operations.*')

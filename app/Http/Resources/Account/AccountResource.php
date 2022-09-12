@@ -24,6 +24,7 @@ class AccountResource extends JsonResource
             'status' => $this->status,
             'balance' => $this->balance,
             'description' => $this->description,
+            'user' => $this->user,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

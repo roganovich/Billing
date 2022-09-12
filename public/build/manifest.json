@@ -16,13 +16,8 @@
       "_index.14082f20.js"
     ]
   },
-  "resources/sass/admin.scss": {
-    "file": "assets/admin.8c251992.js",
-    "src": "resources/sass/admin.scss",
-    "isEntry": true
-  },
   "resources/js/admin.js": {
-    "file": "assets/admin.332f06c7.js",
+    "file": "assets/admin.9432a0e6.js",
     "src": "resources/js/admin.js",
     "isEntry": true,
     "imports": [
@@ -37,7 +32,7 @@
     "isEntry": true
   },
   "resources/js/cabinet.js": {
-    "file": "assets/cabinet.85848855.js",
+    "file": "assets/cabinet.f05d016a.js",
     "src": "resources/js/cabinet.js",
     "isEntry": true,
     "imports": [
@@ -62,8 +57,13 @@
       "_index.14082f20.js"
     ]
   },
+  "resources/sass/admin.scss": {
+    "file": "assets/admin.cf0682e9.css",
+    "src": "resources/sass/admin.scss",
+    "isEntry": true
+  },
   "resources/sass/app.scss": {
-    "file": "assets/app.28e735b7.css",
+    "file": "assets/app.5b94e1d8.css",
     "src": "resources/sass/app.scss",
     "isEntry": true
   }

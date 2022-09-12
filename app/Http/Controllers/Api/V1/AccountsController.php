@@ -26,7 +26,11 @@ class AccountsController extends Controller
     public function index(Request $request)
     {
         $filter = $request->search;
-        $filter['user_id'] = Auth::user()->id;
+
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
 
         $query = Account::filter($filter)
             ->sort($request->sort)
@@ -99,7 +103,13 @@ class AccountsController extends Controller
             'amount' => 'required|numeric|between:0,999999.99',
         ]);
 
-        $account = Account::findOrFail($id);
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
+
+        $filter['id'] = $id;
+        $account =  Account::where($filter)->firstOrFail();
 
         $validate['account_id'] = $account->id;
         $validate['status_id'] = Operation::STATUS_NEW;
@@ -123,10 +133,13 @@ class AccountsController extends Controller
      */
     public function get($id)
     {
-        $filter['user_id'] = Auth::user()->id;
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
         $filter['id'] = $id;
 
-        return Account::where($filter)->first();
+        return Account::where($filter)->firstOrFail();
     }
 
     /**
@@ -137,10 +150,13 @@ class AccountsController extends Controller
      */
     public function payment($id)
     {
-        $filter['user_id'] = Auth::user()->id;
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
         $filter['id'] = $id;
 
-        return Account::where($filter)->first();
+        return Account::where($filter)->firstOrFail();
     }
 
 
@@ -153,12 +169,24 @@ class AccountsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validate = $request->validate([
-            'title' => 'max:256|required',
-            'description' => 'max:256|nullable',
-        ]);
-
-        $model = Account::findOrFail($id);
+        if(Auth::user()->isAdmin){
+            $validate = $request->validate([
+                'type_id' => 'numeric|required',
+                'title' => 'max:256|required',
+                'description' => 'max:256|nullable',
+            ]);
+        }else{
+            $validate = $request->validate([
+                'title' => 'max:256|required',
+                'description' => 'max:256|nullable',
+            ]);
+        }
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
+        $filter['id'] = $id;
+        $model = Account::where($filter)->firstOrFail();
         $model->update($validate);
 
         return $model;
@@ -172,7 +200,13 @@ class AccountsController extends Controller
      */
     public function destroy($id)
     {
-        $model = Account::findOrFail($id);
+        // Админ видит все записи
+        if (!Auth::user()->isAdmin) {
+            $filter['user_id'] = Auth::user()->id;
+        }
+
+        $filter['id'] = $id;
+        $model = Account::where($filter)->firstOrFail();
         $model->delete();
     }
 }

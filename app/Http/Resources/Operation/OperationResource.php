@@ -20,6 +20,7 @@ class OperationResource extends JsonResource
             'status' => $this->status,
             'user_id' => $this->user_id,
             'account' => $this->account,
+            'user' => $this->account->user,
             'amount' => $this->amount,
             'balance' => $this->balance,
             'options' => $this->options,

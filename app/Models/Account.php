@@ -48,6 +48,11 @@ class Account extends Model
         return (new AccountsFilter($request))->sortable($builder);
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function getTypeAttribute()
     {
         return (isset(self::$types[$this->type_id])) ? self::$types[$this->type_id] : Null;
