@@ -82,6 +82,5 @@ storage/*.key
 public/storage
 public/js
 public/build
-
 # После релиза нужно добавить этот файл в ignore list
 .env
